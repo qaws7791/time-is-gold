@@ -1,23 +1,23 @@
-import { Outlet } from "react-router-dom"
-import styled from "styled-components"
+import { Outlet } from "react-router-dom";
+import styled from "styled-components";
 
 const PageLayout = () => {
   return (
     <FlexBox>
-      <Nav/>
+      <Nav />
 
       <Main>
-        <Outlet/>
+        <Outlet />
       </Main>
     </FlexBox>
-  )
-}
+  );
+};
 
-export default PageLayout
+export default PageLayout;
 
 const FlexBox = styled.div`
-  display:flex;
-`
+  display: flex;
+`;
 
 const Nav = styled.nav`
   width: 360px;
@@ -25,12 +25,8 @@ const Nav = styled.nav`
   border: 1px solid red;
   flex-shrink: 0;
   flex-grow: 0;
-  background-color: gray; /* 삭제 */
-`
+`;
 
 const Main = styled.main`
-  width:100%;
-
-  background-color: blue; /* 삭제 */
-
-`
+  width: 100%;
+`;
