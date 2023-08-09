@@ -1,14 +1,21 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
+export interface ITag {
+  [key: string]: boolean;
+}
 export interface Database {
   public: {
     Tables: {
-      movies: {
+      todos: {
         Row: {
           // the data expected from .select()
           id: number;
-          name: string;
-          data: Json | null;
+          email: string;
+          title: string;
+          content: string;
+          isDone: boolean;
+          tag: ITag;
+          deadLineDate: string;
         };
         Insert: {
           // the data to be passed to .insert()
@@ -26,3 +33,5 @@ export interface Database {
     };
   };
 }
+
+export type ITodo = Database["public"]["Tables"]["todos"]["Row"];
