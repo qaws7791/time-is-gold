@@ -1,14 +1,14 @@
 // // TODO Read
-// TODO Create
+// // TODO Create
 // // TODO Switch
-// TODO Update
+// // TODO Update
 // TODO Delete
 // TODO  + tags
 // TODO  + 중요
 
 import { isDoneType } from "components/TodoCollection/TodoItem";
 import supabase from "supabase";
-import { ITag, ITodo } from "supabase/database.types";
+import { ITag, ITodo, ITodoforInsert, ITodoforUpdate } from "supabase/database.types";
 
 export const getTodos = async () => {
   let { data: Todos } = await supabase.from("Todos").select("*");
@@ -26,6 +26,11 @@ interface TodoSwitch {
   todoIsDone: boolean;
 }
 
+interface TodoUpdate {
+  id: number;
+  updatedTodo: ITodoforUpdate;
+}
+
 export const switchTodo = async (todo: TodoSwitch) => {
   const { id, todoIsDone } = todo;
   try {
@@ -35,23 +40,24 @@ export const switchTodo = async (todo: TodoSwitch) => {
   }
 };
 
-export const postTodo = async (newTodo: ITodo) => {
+export const postTodo = async (newTodo: ITodoforInsert) => {
+  // TODO 일단은 try catch 해주고,  필요없으면 없애기
   await supabase.from("Todos").insert(newTodo);
 };
 
-// export const editTodos = async () => {
-//   await
-// }
+export const updateTodo = async (todo: TodoUpdate) => {
+  const { id, updatedTodo } = todo;
+  try {
+    await supabase.from("Todos").update(updatedTodo).eq("id", id);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// export cosnt deleteTodo = async(todoId) => {
-//   await
-// }
-
-// // {
-//   email: "olxl@gmail.com",
-//   title: "test",
-//   content: "test",
-//   isDone: false,
-//   tag: { edu: false, work: true },
-//   deadLineDate: "2020-02-04"
-// }
+export const deleteTodo = async (id: number) => {
+  try {
+    await supabase.from("Todos").delete().eq("id", id);
+  } catch (error) {
+    console.log(error);
+  }
+};

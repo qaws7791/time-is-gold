@@ -1,19 +1,23 @@
-import { Input, DatePicker, Space } from "antd";
-import { useEffect, useState } from "react";
-import dayjs from "dayjs";
-import { whatIsToday } from "./today";
-import { postTodo } from "api/todo";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ITodo, ITodoforInsert } from "supabase/database.types";
+import { DatePicker, Input, Space } from "antd";
+import { useState } from "react";
+import dayjs from "dayjs";
+import { ITodo, ITodoforUpdate } from "supabase/database.types";
+import { whatIsToday } from "./today";
+import { deleteTodo, updateTodo } from "api/todo";
+import TextArea from "antd/es/input/TextArea";
 
-const { TextArea } = Input;
-const { RangePicker } = DatePicker;
+type Props = {
+  item: ITodo;
+  setIsStartForm: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const TodoForm: React.FC = () => {
+const TodoUpdateForm = ({ item, setIsStartForm }: Props) => {
   const queryClient = useQueryClient();
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
-  const [deadline, setDeadline] = useState<string | undefined>(whatIsToday());
+  const [title, setTitle] = useState<string>(item.title);
+  const [content, setContent] = useState<string>(item.content);
+  const [deadline, setDeadline] = useState<string | undefined>(item.deadLineDate);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.target.name === "title") {
       setTitle(e.target.value);
@@ -21,13 +25,20 @@ const TodoForm: React.FC = () => {
       setContent(e.target.value);
     }
   };
+
   const onDayChange = (e: dayjs.Dayjs | null) => {
     const checkDate = e?.format().split("T")[0];
     console.log("✅", checkDate);
     setDeadline(checkDate);
   };
 
-  const todoPostMutation = useMutation(postTodo, {
+  const todoUpdateMutation = useMutation(updateTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["todos"]);
+    }
+  });
+
+  const todoDeleteMutation = useMutation(deleteTodo, {
     onSuccess: () => {
       queryClient.invalidateQueries(["todos"]);
     }
@@ -36,7 +47,7 @@ const TodoForm: React.FC = () => {
   // TODO email : auth연결하면 수정해줘야함. + tag 기능 추가하면 수정해줘야함. (현재 임의로 지정)
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newTodo: ITodoforInsert = {
+    const updatedTodo: ITodoforUpdate = {
       email: "jieun2563@naver.com",
       title,
       content,
@@ -44,10 +55,17 @@ const TodoForm: React.FC = () => {
       tag: { edu: false },
       deadLineDate: deadline
     };
-    todoPostMutation.mutate(newTodo);
+    todoUpdateMutation.mutate({ id: item.id, updatedTodo });
     setTitle("");
     setContent("");
     setDeadline(whatIsToday());
+    setIsStartForm(false);
+  };
+  const onClickDeleteHandler = () => {
+    todoDeleteMutation.mutate(item.id);
+  };
+  const onClickCloseModalHandler = () => {
+    setIsStartForm(false);
   };
   return (
     <form onSubmit={e => onSubmitHandler(e)}>
@@ -79,7 +97,14 @@ const TodoForm: React.FC = () => {
 
       <input type="text" name="tag" defaultValue={"여기는 일단 보류"} />
       <button type="submit">저장</button>
+      <button type="button" onClick={onClickDeleteHandler}>
+        삭제
+      </button>
+      <button type="button" onClick={onClickCloseModalHandler}>
+        닫기
+      </button>
     </form>
   );
 };
-export default TodoForm;
+
+export default TodoUpdateForm;
