@@ -1,22 +1,13 @@
-import { Modal } from "components/common";
+import FormCalendar from "pages/Calendar/FormCalendar";
 import { Outlet } from "react-router-dom";
-import useModalStore from "store/useModalStore";
 import styled from "styled-components";
 
 const PageLayout = () => {
-  const { myProfile, openModal } = useModalStore(state => state);
-
-  const modalOpen = () => openModal("myProfile");
-
   return (
     <FlexBox>
       <Nav>
-        <button onClick={modalOpen}>모달열기</button>
-        {myProfile && (
-          <Modal closeTarget="myProfile">
-            <p>test</p>
-          </Modal>
-        )}
+        {/* 임시 Form  모달로 구현예정*/}
+        <FormCalendar />
       </Nav>
       <Main>
         <Outlet />

@@ -3,18 +3,25 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
   public: {
     Tables: {
-      movies: {
+      Schedules: {
         Row: {
           // the data expected from .select()
           id: number;
-          name: string;
-          data: Json | null;
+          email: string;
+          title: string;
+          date: string;
+          startTime: string;
+          endTime: string;
+          category: string;
+          // data: Json | null;
         };
         Insert: {
-          // the data to be passed to .insert()
-          id?: never; // generated columns must not be supplied
-          name: string; // `not null` columns with no default must be supplied
-          data?: Json | null; // nullable columns can be omitted
+          email: string;
+          title: string;
+          date: string;
+          startTime: string;
+          endTime: string;
+          category: number;
         };
         Update: {
           // the data to be passed to .update()

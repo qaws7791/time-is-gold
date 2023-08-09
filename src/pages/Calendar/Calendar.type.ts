@@ -8,4 +8,5 @@ export interface EventData {
   backgroundColor?: ColorValue;
   borderColor?: ColorValue;
   textColor?: ColorValue;
+  id: number;
 }
