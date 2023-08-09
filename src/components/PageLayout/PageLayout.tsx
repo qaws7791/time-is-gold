@@ -1,36 +1,34 @@
-import { Outlet } from "react-router-dom"
-import styled from "styled-components"
+import React, { useEffect, useState } from 'react';
+import { Layout} from 'antd';
+import { Outlet, useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import useMenuStore from 'store/useMenuStore';
+import Header from './Header';
 
-const PageLayout = () => {
+const { Content } = Layout;
+
+const PageLayout: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(true);
+  const {changePage,changeMenu} = useMenuStore((state)=>state)
+  const {pathname} = useLocation()
+
+  useEffect(()=>{
+    changePage(pathname.split('/')[1])
+  },[pathname,changePage,changeMenu])
+
   return (
-    <FlexBox>
-      <Nav/>
+    <Layout style={{  height:'100vh' }}>
+      <Header open={collapsed} setOpen={setCollapsed}/>
+      <Layout>
+        <Sidebar open={collapsed} setOpen={setCollapsed}/>
+        <Layout>
+          <Content>
+            <Outlet/>
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
+  );
+};
 
-      <Main>
-        <Outlet/>
-      </Main>
-    </FlexBox>
-  )
-}
-
-export default PageLayout
-
-const FlexBox = styled.div`
-  display:flex;
-`
-
-const Nav = styled.nav`
-  width: 360px;
-  height: 100vh;
-  border: 1px solid red;
-  flex-shrink: 0;
-  flex-grow: 0;
-  background-color: gray; /* 삭제 */
-`
-
-const Main = styled.main`
-  width:100%;
-
-  background-color: blue; /* 삭제 */
-
-`
+export default PageLayout;
