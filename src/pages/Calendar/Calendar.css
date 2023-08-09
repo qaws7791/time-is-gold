@@ -1,0 +1,36 @@
+.fc {
+  /* default CSS  => 없어도 적용됩니다
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+  */
+
+  /* max-width: 1100px; */
+  /* margin: 50px 50px; */
+}
+
+.fc-media-screen {
+  /* background-color: black; 모든 백그라운드 컬러는 확인하려고 넣었습니다 */
+}
+
+.fc-toolbar {
+  /* default CSS
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  */
+}
+
+.fc-header-toolbar {
+  /* default CSS
+  margin-bottom: 1.5em;
+  */
+}
+
+.fc-toolbar-ltr {
+  /* background-color: black; */
+}
+
+.fc-toolbar-chunk {
+  /* background-color: black; */
+}
