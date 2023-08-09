@@ -1,18 +1,29 @@
+// TODO 할일 추가 전역으로 관리하는 모달로 띄울 예정 (일단 임시 생성)
+
 import { useQuery } from "@tanstack/react-query";
-import { getTodos } from "components/api/todo";
-import TodoItem from "./TodoItem";
+import { getTodos } from "api/todo";
+import TodoItem from "../../components/TodoCollection/TodoItem";
+import TodoForm from "components/TodoCollection/TodoForm";
+import { useState } from "react";
 
 const Todo: React.FC = () => {
   const { data: Todos, isLoading, isError } = useQuery(["todos"], getTodos);
+  const [isStartForm, setIsStartForm] = useState<boolean>(false);
 
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
   if (Todos) console.log(Todos);
   return (
     <div>
-      {Todos?.map(item => {
-        return <TodoItem key={item.id} item={item} />;
-      })}
+      {isStartForm && <TodoForm />}
+      <div>
+        <button onClick={() => setIsStartForm(prev => !prev)}>+</button>
+      </div>
+      <div>
+        {Todos?.map(item => {
+          return <TodoItem key={item.id} item={item} />;
+        })}
+      </div>
     </div>
   );
 };
