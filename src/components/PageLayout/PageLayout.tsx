@@ -1,22 +1,11 @@
-import { Modal } from "components/common";
 import { Outlet } from "react-router-dom";
-import useModalStore from "store/useModalStore";
 import styled from "styled-components";
 
 const PageLayout = () => {
-  const { myProfile, openModal } = useModalStore(state => state);
-
-  const modalOpen = () => openModal("myProfile");
 
   return (
     <FlexBox>
       <Nav>
-        <button onClick={modalOpen}>모달열기</button>
-        {myProfile && (
-          <Modal closeTarget="myProfile">
-            <p>test</p>
-          </Modal>
-        )}
       </Nav>
       <Main>
         <Outlet />
