@@ -7,6 +7,8 @@ import { AiOutlineCheck } from "react-icons/ai";
 import "../../icon.css";
 import useOverlay from "hooks/useOverlay";
 import TodoUpdateModal from "./TodoUpdateModal";
+import { TiStarFullOutline } from "react-icons/ti";
+import { TiStarOutline } from "react-icons/ti";
 
 type Props = {
   item: ITodo;
@@ -59,6 +61,7 @@ const TodoItem = ({ item }: Props) => {
           <AiOutlineCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} />
         </StCardHeader>
         <StCardBody>
+          <TiStarOutline className="star" />
           <p>{item.content}</p>
           <p>~{item.deadLineDate}</p>
           {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}
