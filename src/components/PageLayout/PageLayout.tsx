@@ -1,14 +1,10 @@
-import FormCalendar from "pages/Calendar/FormCalendar";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const PageLayout = () => {
   return (
     <FlexBox>
-      <Nav>
-        {/* 임시 Form  모달로 구현예정*/}
-        <FormCalendar />
-      </Nav>
+      <Nav />
       <Main>
         <Outlet />
       </Main>
