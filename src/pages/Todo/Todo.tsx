@@ -5,25 +5,49 @@ import { getTodos } from "api/todo";
 import TodoItem from "../../components/TodoCollection/TodoItem";
 import TodoForm from "components/TodoCollection/TodoForm";
 import { useState } from "react";
+import { styled } from "styled-components";
+import { BaseModal } from "components/common";
+import TodoModal from "components/TodoCollection/TodoModal";
+import useOverlay from "hooks/useOverlay";
 
 const Todo: React.FC = () => {
   const { data: Todos, isLoading, isError } = useQuery(["todos"], getTodos);
-  const [isStartForm, setIsStartForm] = useState<boolean>(false);
+  const overlay = useOverlay();
+
+  const openPromiseToModal = () =>
+    new Promise(resolve => {
+      overlay.open(({ close }) => (
+        <TodoModal
+          onConfirm={() => {
+            resolve(true);
+            close();
+          }}
+          onClose={() => {
+            resolve(false);
+            close();
+          }}
+        />
+      ));
+    });
+
+  const onClickStartForm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    await openPromiseToModal();
+  };
 
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
   if (Todos) console.log(Todos);
   return (
     <div>
-      {isStartForm && <TodoForm />}
+      {/* {isStartForm && <TodoModal />} */}
       <div>
-        <button onClick={() => setIsStartForm(prev => !prev)}>+</button>
+        <button onClick={onClickStartForm}>+</button>
       </div>
-      <div>
-        {Todos?.map(item => {
+      <StWrapperTodos>
+        {Todos?.sort((a, b) => a.id - b.id).map(item => {
           return <TodoItem key={item.id} item={item} />;
         })}
-      </div>
+      </StWrapperTodos>
     </div>
   );
 };
@@ -35,3 +59,12 @@ export default Todo;
 
 이 테이블을 생성한 후 정책을 생성할 수 있습니다.
 */
+
+const StWrapperTodos = styled.div`
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: dense;
+`;

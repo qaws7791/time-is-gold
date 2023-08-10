@@ -6,13 +6,15 @@ import { ITodo, ITodoforUpdate } from "supabase/database.types";
 import { whatIsToday } from "./today";
 import { deleteTodo, updateTodo } from "api/todo";
 import TextArea from "antd/es/input/TextArea";
+import { styled } from "styled-components";
 
-type Props = {
+interface Props {
   item: ITodo;
-  setIsStartForm: React.Dispatch<React.SetStateAction<boolean>>;
-};
+  onConfirm: () => void;
+  onClose: () => void;
+}
 
-const TodoUpdateForm = ({ item, setIsStartForm }: Props) => {
+const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
   const queryClient = useQueryClient();
   const [title, setTitle] = useState<string>(item.title);
   const [content, setContent] = useState<string>(item.content);
@@ -59,52 +61,68 @@ const TodoUpdateForm = ({ item, setIsStartForm }: Props) => {
     setTitle("");
     setContent("");
     setDeadline(whatIsToday());
-    setIsStartForm(false);
+    onConfirm();
   };
   const onClickDeleteHandler = () => {
+    if (!window.confirm("삭제할거임?")) {
+      return false;
+    }
     todoDeleteMutation.mutate(item.id);
+    onClose();
   };
   const onClickCloseModalHandler = () => {
-    setIsStartForm(false);
+    onClose();
   };
   return (
-    <form onSubmit={e => onSubmitHandler(e)}>
-      <Input
-        name="title"
-        showCount
-        maxLength={30}
-        value={title}
-        onChange={onChange}
-        placeholder="제목을 입력하세요"
-      />
-      <TextArea
-        name="content"
-        showCount
-        maxLength={50}
-        style={{ height: 50, resize: "none" }}
-        value={content}
-        onChange={onChange}
-        placeholder="내용을 입력하세요"
-      />
-      <Space direction="vertical" size={12}>
-        <DatePicker
-          name="deadline"
-          bordered={false}
-          defaultValue={dayjs(deadline)}
-          onChange={e => onDayChange(e)}
+    <StFormBackground>
+      <form onSubmit={e => onSubmitHandler(e)}>
+        <Input
+          name="title"
+          showCount
+          maxLength={20}
+          value={title}
+          onChange={onChange}
+          placeholder="제목을 입력하세요"
         />
-      </Space>
+        <TextArea
+          name="content"
+          showCount
+          maxLength={35}
+          style={{ height: 50, resize: "none" }}
+          value={content}
+          onChange={onChange}
+          placeholder="내용을 입력하세요"
+        />
+        <Space direction="vertical" size={12}>
+          <DatePicker
+            name="deadline"
+            bordered={false}
+            defaultValue={dayjs(deadline)}
+            onChange={e => onDayChange(e)}
+          />
+        </Space>
 
-      <input type="text" name="tag" defaultValue={"여기는 일단 보류"} />
-      <button type="submit">저장</button>
-      <button type="button" onClick={onClickDeleteHandler}>
-        삭제
-      </button>
-      <button type="button" onClick={onClickCloseModalHandler}>
-        닫기
-      </button>
-    </form>
+        <input type="text" name="tag" defaultValue={"여기는 일단 보류"} />
+        <button type="submit">저장</button>
+        <button type="button" onClick={onClickDeleteHandler}>
+          삭제
+        </button>
+        <button type="button" onClick={onClickCloseModalHandler}>
+          닫기
+        </button>
+      </form>
+    </StFormBackground>
   );
 };
 
 export default TodoUpdateForm;
+
+const StFormBackground = styled.div`
+  margin-top: 50px;
+  width: 600px;
+  height: 600px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

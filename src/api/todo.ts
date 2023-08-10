@@ -2,25 +2,19 @@
 // // TODO Create
 // // TODO Switch
 // // TODO Update
-// TODO Delete
+// // TODO Delete
+// TODO overlay modal 삭제 버튼에 적용 (삭제하시겠습니까? confirm용으로!)
 // TODO  + tags
 // TODO  + 중요
 
-import { isDoneType } from "components/TodoCollection/TodoItem";
 import supabase from "supabase";
-import { ITag, ITodo, ITodoforInsert, ITodoforUpdate } from "supabase/database.types";
+import { ITodoforInsert, ITodoforUpdate } from "supabase/database.types";
 
 export const getTodos = async () => {
   let { data: Todos } = await supabase.from("Todos").select("*");
   return Todos;
 };
 
-// 완료/취소해줄 from 'Todos' todo id, update 내용 {isDone : !원래값}
-
-// SELECT ISDONE
-// let { data: Todos, error } = await supabase
-//   .from('Todos')
-//   .select('isDone')
 interface TodoSwitch {
   id: number;
   todoIsDone: boolean;
