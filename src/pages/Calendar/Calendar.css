@@ -1,36 +1,152 @@
+:root {
+  --fc-small-font-size: 0.85em;
+
+  --fc-page-bg-color: #fff;
+  --fc-neutral-bg-color: hsla(0, 0%, 82%, 0.3);
+  --fc-neutral-text-color: grey;
+  --fc-border-color: #ddd;
+
+  --fc-button-text-color: #fff;
+
+  --fc-button-bg-color: #f3af00;
+  --fc-button-border-color: #f3af00;
+
+  --fc-button-hover-bg-color: #f8cf66;
+  --fc-button-hover-border-color: #f8cf66;
+
+  --fc-button-active-bg-color: #f8cf66;
+  --fc-button-active-border-color: #f8cf66;
+
+  --fc-event-bg-color: #3788d8;
+  --fc-event-border-color: #3788d8;
+  --fc-event-text-color: #fff;
+  --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+
+  --fc-more-link-bg-color: #d0d0d0;
+  --fc-more-link-text-color: inherit;
+
+  --fc-event-resizer-thickness: 8px;
+  --fc-event-resizer-dot-total-width: 8px;
+  --fc-event-resizer-dot-border-width: 1px;
+
+  --fc-non-business-color: hsla(0, 0%, 84%, 0.3);
+
+  --fc-bg-event-color: #8fdf82;
+  --fc-bg-event-opacity: 0.3;
+
+  --fc-highlight-color: rgba(188, 232, 241, 0.3);
+  --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+
+  --fc-now-indicator-color: red;
+
+  --fc-daygrid-event-dot-width: 8px;
+}
+
 .fc {
-  /* default CSS  => 없어도 적용됩니다
-  display: flex;
-  flex-direction: column;
-  font-size: 1em;
-  */
-
-  /* max-width: 1100px; */
-  /* margin: 50px 50px; */
+  height: 90vh;
+  margin: 20px;
 }
 
-.fc-media-screen {
-  /* background-color: black; 모든 백그라운드 컬러는 확인하려고 넣었습니다 */
-}
-
-.fc-toolbar {
-  /* default CSS
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  */
-}
-
-.fc-header-toolbar {
-  /* default CSS
-  margin-bottom: 1.5em;
-  */
-}
-
-.fc-toolbar-ltr {
+.fc-dayGridMonth-view .fc-view .fc-daygrid {
+  /* height: 100px; */
   /* background-color: black; */
 }
 
-.fc-toolbar-chunk {
+.fc-daygrid {
+  /* height: 100px; */
   /* background-color: black; */
+}
+
+.fc-scrollgrid .fc-scrollgrid-liquid {
+  /* height: 100px; */
+  /* background-color: black; */
+}
+
+.fc-scrollgrid-section .fc-scrollgrid-section-header {
+  /* height: 100px; */
+  /* background-color: black; */
+}
+
+/* 요일 밑에 공간 생김 */
+.fc-scroller-harness {
+  /* height: 100px; */
+  /* background-color: black; */
+}
+
+.fc-scroller {
+  /* height: 100px; */
+  /* background-color: black; */
+}
+
+/* 요일 행 높이지정 */
+.fc .fc-scrollgrid-section table {
+  /* display: flex; */
+  /* text-align: center; */
+  height: 50px;
+  /* vertical-align: middle; */
+}
+
+/* 요일 행 TEXT 중간 정렬 */
+.fc td,
+.fc th {
+  vertical-align: middle;
+}
+
+.fc .fc-scrollgrid-section {
+  /* display: flex; */
+  /* height: 50px; */
+}
+
+.fc .fc-col-header-cell-cushion {
+  /* align-self: center; */
+  /* justify-self: center; */
+}
+
+.fc-col-header {
+  /* height: 300px; */
+  /* background-color: black; */
+  /* vertical-align: middle; */
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background-color: var(--fc-button-active-bg-color);
+  border-color: var(--fc-button-active-border-color);
+  color: var(--fc-button-text-color);
+}
+
+.fc .fc-button-primary:hover {
+  background-color: var(--fc-button-hover-bg-color);
+  border-color: var(--fc-button-hover-border-color);
+  color: var(--fc-button-text-color);
+}
+
+/* 타임 그리드에서의 이벤트 */
+.fc-v-event {
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/* 타임 그리드에서 시간 TEXT */
+.fc-timegrid-event .fc-event-time {
+  font-size: 1rem;
+}
+
+/* 데이 그리드에서 시간 TEXT */
+.fc-direction-ltr .fc-daygrid-event .fc-event-time {
+  font-size: 1rem;
+}
+
+/* 타임 그리드에서 내용 TEXT */
+.fc-timegrid-event .fc-event-title {
+  font-size: 1.5rem;
+}
+
+/* 데이 그리드에서 내용 TEXT */
+.fc-daygrid-block-event .fc-event-title {
+  font-size: 1rem;
+}
+
+.fc-event-main-frame {
+  border-radius: 20px;
 }
