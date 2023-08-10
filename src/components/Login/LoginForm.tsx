@@ -1,35 +1,26 @@
 import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
-//import supabase from "supabase";
-//import { Auth } from "@supabase/auth-ui-react";
-//import { ThemeSupa } from "@supabase/auth-ui-shared";
+import LoginStore from "store/LoginStore";
 
-export interface LoginType {
-  email: string;
-  password: string;
-  loginHandler: (e: React.MouseEvent<HTMLElement, MouseEvent>) => Promise<void>;
-  googleLoginHandler: (e: React.FormEvent) => Promise<void>;
-  EmailChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  PasswordChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  PasswordCheckChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-const LoginForm = ({
-  email,
-  password,
-  loginHandler,
-  googleLoginHandler,
-  EmailChangeHandler,
-  PasswordChangeHandler
-}: LoginType) => {
+const LoginForm = () => {
+  const {
+    email,
+    password,
+    EmailChangeHandler,
+    PasswordChangeHandler,
+    loginHandler,
+    googleLoginHandler,
+    clear
+  } = LoginStore();
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
-
   const resetField = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     form.setFieldsValue({
       email: "",
-      password: ""
+      password: "",
+      passwordCheck: ""
     });
   };
   return (

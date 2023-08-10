@@ -1,26 +1,19 @@
 import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
+import LoginStore from "store/LoginStore";
 
-export interface SignUpType {
-  email: string;
-  password: string;
-  passwordCheck: string;
-  signupHandler: (e: React.MouseEvent<HTMLElement, MouseEvent>) => Promise<void>;
-  googleLoginHandler: (e: React.FormEvent) => Promise<void>;
-  EmailChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  PasswordChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  PasswordCheckChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-const SignUpForm = ({
-  email,
-  password,
-  passwordCheck,
-  signupHandler,
-  googleLoginHandler,
-  EmailChangeHandler,
-  PasswordChangeHandler,
-  PasswordCheckChangeHandler
-}: SignUpType) => {
+const SignUpForm = () => {
+  const {
+    email,
+    password,
+    passwordCheck,
+    EmailChangeHandler,
+    PasswordChangeHandler,
+    PasswordCheckChangeHandler,
+    signupHandler,
+    googleLoginHandler,
+    clear
+  } = LoginStore();
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
@@ -32,6 +25,7 @@ const SignUpForm = ({
       passwordCheck: ""
     });
   };
+
   return (
     <div>
       <Form
@@ -64,7 +58,6 @@ const SignUpForm = ({
             onChange={PasswordChangeHandler}
           />
         </Form.Item>
-
         <Form.Item
           name="passwordCheck"
           rules={[{ required: true, message: "Please input your Password agian!" }]}
@@ -92,7 +85,6 @@ const SignUpForm = ({
           >
             회원가입
           </Button>
-
           <Space direction="vertical">
             <Space wrap>
               <Button
