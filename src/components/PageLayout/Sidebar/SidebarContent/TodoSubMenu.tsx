@@ -11,13 +11,13 @@ import useMenuStore from 'store/useMenuStore';
 type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
-  getItem('전체', '1', <AppstoreOutlined />),
-  getItem('중요', '10', <StarOutlined />),
-  getItem('완료', '20', <CheckOutlined />),
-  getItem('태그', '30', <TagsOutlined />, 
+  getItem('전체', 'all', <AppstoreOutlined />),
+  getItem('중요', 'important', <StarOutlined />),
+  getItem('완료', 'completed', <CheckOutlined />),
+  getItem('태그', 'tags', <TagsOutlined />, 
   [
-    getItem('태그 1', '41'), 
-    getItem('태그 2', '42')
+    getItem('태그 1', 'tag-tag1'), 
+    getItem('태그 2', 'tag-tag2')
   ],
     'group')
 ];
@@ -41,7 +41,7 @@ function getItem(
 
 const TodoSubMenu = () => {
   const { menu, changeMenu } = useMenuStore()
-  let selectedKey = '1'
+  let selectedKey = 'all'
   if(menu) {
       for (let i = 0; i < items.length; i++) {
         if (items[i]!.key === menu) {
@@ -56,6 +56,7 @@ const TodoSubMenu = () => {
         defaultSelectedKeys={[selectedKey]}
         mode='inline'
         items={items}
+        selectedKeys={[menu]}
         onSelect={({ item, key, keyPath, selectedKeys, domEvent })=>{
           console.log(key)
           changeMenu(key)
