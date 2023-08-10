@@ -41,6 +41,7 @@ export interface Database {
           isDone: boolean;
           tag: ITag;
           deadLineDate: string | undefined;
+          important: boolean;
         };
         Insert: {
           // the data to be passed to .insert()
@@ -52,6 +53,7 @@ export interface Database {
           isDone: boolean;
           tag: ITag;
           deadLineDate: string | undefined;
+          important: boolean;
         };
         Update: {
           // the data to be passed to .update()
@@ -62,6 +64,7 @@ export interface Database {
           isDone: boolean;
           tag: ITag;
           deadLineDate: string | undefined;
+          important: boolean;
         };
       };
       Schedules: { Row: ISchedulesRow; Insert: ISchedulesInsert; Update: ISchedulesUpdate };

@@ -54,7 +54,8 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
       content,
       isDone: false,
       tag: { edu: false },
-      deadLineDate: deadline
+      deadLineDate: deadline,
+      important: false
     };
     todoPostMutation.mutate(newTodo);
     setTitle("");

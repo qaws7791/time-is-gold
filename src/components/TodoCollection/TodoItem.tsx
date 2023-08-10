@@ -1,7 +1,7 @@
 // TODO tag는 후순위로 미루기 (할 때 datatype등 다시 설정해줘야함)
 import { ITodo } from "supabase/database.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { switchTodo } from "api/todo";
+import { checkTodoImportance, switchTodo } from "api/todo";
 import { styled } from "styled-components";
 import { AiOutlineCheck } from "react-icons/ai";
 import "../../icon.css";
@@ -25,6 +25,13 @@ const TodoItem = ({ item }: Props) => {
       queryClient.invalidateQueries(["todos"]);
     }
   });
+
+  const todoImportantMutation = useMutation(checkTodoImportance, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["todos"]);
+    }
+  });
+
   const onClickSwitchHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     e.stopPropagation();
     const todoIsDone: boolean = !item.isDone;
@@ -52,6 +59,11 @@ const TodoItem = ({ item }: Props) => {
       ));
     });
 
+  const onClickCheckImportance = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+    e.stopPropagation();
+    const important: boolean = !item.important;
+    todoImportantMutation.mutate({ id: item.id, important });
+  };
   return (
     <>
       {/* {isStartForm && <TodoUpdateForm item={item} setIsStartForm={setIsStartForm} />} */}
@@ -61,7 +73,11 @@ const TodoItem = ({ item }: Props) => {
           <AiOutlineCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} />
         </StCardHeader>
         <StCardBody>
-          <TiStarOutline className="star" />
+          {item.important ? (
+            <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
+          ) : (
+            <TiStarOutline className="star" onClick={onClickCheckImportance} />
+          )}
           <p>{item.content}</p>
           <p>~{item.deadLineDate}</p>
           {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}

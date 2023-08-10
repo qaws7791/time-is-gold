@@ -15,6 +15,11 @@ export const getTodos = async () => {
   return Todos;
 };
 
+interface TodoCheckImportance {
+  id: number;
+  important: boolean;
+}
+
 interface TodoSwitch {
   id: number;
   todoIsDone: boolean;
@@ -31,6 +36,15 @@ export const switchTodo = async (todo: TodoSwitch) => {
     await supabase.from("Todos").update({ isDone: todoIsDone }).eq("id", id);
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const checkTodoImportance = async (todo: TodoCheckImportance) => {
+  const { id, important } = todo;
+  try {
+    await supabase.from("Todos").update({ important: important }).eq("id", id);
+  } catch (error) {
+    console.log("error");
   }
 };
 

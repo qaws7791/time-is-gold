@@ -53,9 +53,10 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
       email: "jieun2563@naver.com",
       title,
       content,
-      isDone: false,
+      isDone: item.isDone,
       tag: { edu: false },
-      deadLineDate: deadline
+      deadLineDate: deadline,
+      important: item.important
     };
     todoUpdateMutation.mutate({ id: item.id, updatedTodo });
     setTitle("");

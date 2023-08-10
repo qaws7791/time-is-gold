@@ -6,10 +6,12 @@ import TodoItem from "../../components/TodoCollection/TodoItem";
 import { styled } from "styled-components";
 import TodoModal from "components/TodoCollection/TodoModal";
 import useOverlay from "hooks/useOverlay";
+import useMenuStore from "store/useMenuStore";
 
 const Todo: React.FC = () => {
-  const { data: Todos, isLoading, isError } = useQuery(["todos"], getTodos);
   const overlay = useOverlay();
+  const { menu } = useMenuStore();
+  const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
 
   const openPromiseToModal = () =>
     new Promise(resolve => {
@@ -30,6 +32,17 @@ const Todo: React.FC = () => {
   const onClickStartForm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     await openPromiseToModal();
   };
+
+  let Todos;
+  if (menu === "1") Todos = allTodos;
+  else if (menu === "10")
+    Todos = allTodos?.filter(item => {
+      return item.important === true && item.isDone === false;
+    });
+  else if (menu === "20")
+    Todos = allTodos?.filter(item => {
+      return item.isDone === true;
+    });
 
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
