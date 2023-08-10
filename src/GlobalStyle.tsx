@@ -11,6 +11,10 @@ const GlobalStyle = styled.createGlobalStyle`
     -webkit-tap-highlight-color: transparent;
   }
 
+  body {
+    font-family: "Roboto", normal, "Gowun Dodum", normal, sans-serif;
+  }
+
   a {
     text-decoration: none;
     color: inherit;

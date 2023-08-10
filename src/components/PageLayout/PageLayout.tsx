@@ -2,11 +2,9 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const PageLayout = () => {
-
   return (
     <FlexBox>
-      <Nav>
-      </Nav>
+      <Nav />
       <Main>
         <Outlet />
       </Main>

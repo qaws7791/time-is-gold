@@ -1,8 +1,11 @@
 import React from "react";
+
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 
 interface ModalProps {
   children: React.ReactNode;
+  // type?: "schedule";
 }
 
 const ModalWrapper = styled.div`
