@@ -1,16 +1,10 @@
 // TODO tag는 후순위로 미루기 (할 때 datatype등 다시 설정해줘야함)
 import { ITodo } from "supabase/database.types";
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { switchTodo } from "api/todo";
 import { styled } from "styled-components";
-import TodoUpdateForm from "./TodoUpdateForm";
-import { FaCheck } from "react-icons/fa6";
-import { BiCheck } from "react-icons/bi";
 import { AiOutlineCheck } from "react-icons/ai";
-
 import "../../icon.css";
-import { useStore } from "zustand";
 import useOverlay from "hooks/useOverlay";
 import TodoUpdateModal from "./TodoUpdateModal";
 
@@ -22,7 +16,6 @@ export type isDoneType = { isDone: boolean };
 const TodoItem = ({ item }: Props) => {
   const overlay = useOverlay();
 
-  const [isStartForm, setIsStartForm] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
   const todoIsDoneMutation = useMutation(switchTodo, {

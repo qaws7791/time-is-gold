@@ -1,10 +1,10 @@
 import { Input, DatePicker, Space } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
 import { whatIsToday } from "./today";
 import { postTodo } from "api/todo";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ITodo, ITodoforInsert } from "supabase/database.types";
+import { ITodoforInsert } from "supabase/database.types";
 import { styled } from "styled-components";
 
 const { TextArea } = Input;

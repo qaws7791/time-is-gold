@@ -3,10 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "api/todo";
 import TodoItem from "../../components/TodoCollection/TodoItem";
-import TodoForm from "components/TodoCollection/TodoForm";
-import { useState } from "react";
 import { styled } from "styled-components";
-import { BaseModal } from "components/common";
 import TodoModal from "components/TodoCollection/TodoModal";
 import useOverlay from "hooks/useOverlay";
 
