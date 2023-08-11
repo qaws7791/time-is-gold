@@ -1,6 +1,7 @@
 import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
 import LoginStore from "store/LoginStore";
+import * as St from "style/loginStyled";
 
 const LoginForm = () => {
   const {
@@ -56,39 +57,36 @@ const LoginForm = () => {
           />
         </Form.Item>
 
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            style={{ backgroundColor: "yellow" }}
-            onClick={e => {
-              loginHandler(e);
-              resetField(e); // 로그인 시에 password 필드 초기화
-            }}
-          >
-            로그인
-          </Button>
+        <St.Flex>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              style={{ backgroundColor: "yellow" }}
+              onClick={e => {
+                loginHandler(e);
+                resetField(e); // 로그인 시에 password 필드 초기화
+              }}
+            >
+              로그인
+            </Button>
 
-          <Space direction="vertical">
-            <Space wrap>
-              <Button
-                type="primary"
-                icon={<GoogleOutlined />}
-                style={{ backgroundColor: "yellow" }}
-                onClick={googleLoginHandler}
-              >
-                구글 로그인
-              </Button>
+            <Space direction="vertical">
+              <Space wrap>
+                <Button
+                  type="primary"
+                  icon={<GoogleOutlined />}
+                  style={{ backgroundColor: "yellow" }}
+                  onClick={googleLoginHandler}
+                >
+                  구글 로그인
+                </Button>
+              </Space>
             </Space>
-          </Space>
-        </Form.Item>
+          </Form.Item>
+        </St.Flex>
       </Form>
-      {/* <Auth
-        supabaseClient={supabase}
-        appearance={{theme: ThemeSupa}}
-        providers={["google"]}
-      /> */}
     </div>
   );
 };

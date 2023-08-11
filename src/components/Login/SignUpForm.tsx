@@ -1,7 +1,7 @@
 import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
 import LoginStore from "store/LoginStore";
-
+import * as St from "style/loginStyled";
 const SignUpForm = () => {
   const {
     email,
@@ -71,33 +71,34 @@ const SignUpForm = () => {
             onChange={PasswordCheckChangeHandler}
           />
         </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="signUp-form-button"
-            style={{ backgroundColor: "yellow" }}
-            onClick={e => {
-              signupHandler(e);
-              resetField(e);
-            }}
-          >
-            회원가입
-          </Button>
-          <Space direction="vertical">
-            <Space wrap>
-              <Button
-                type="primary"
-                icon={<GoogleOutlined />}
-                style={{ backgroundColor: "yellow" }}
-                onClick={googleLoginHandler}
-              >
-                구글과 회원가입
-              </Button>
+        <St.Flex>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="signUp-form-button"
+              style={{ backgroundColor: "yellow" }}
+              onClick={e => {
+                signupHandler(e);
+                resetField(e);
+              }}
+            >
+              회원가입
+            </Button>
+            <Space direction="vertical">
+              <Space wrap>
+                <Button
+                  type="primary"
+                  icon={<GoogleOutlined />}
+                  style={{ backgroundColor: "yellow" }}
+                  onClick={googleLoginHandler}
+                >
+                  구글과 회원가입
+                </Button>
+              </Space>
             </Space>
-          </Space>
-        </Form.Item>
+          </Form.Item>
+        </St.Flex>
       </Form>
     </div>
   );

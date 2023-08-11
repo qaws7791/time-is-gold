@@ -44,6 +44,7 @@ const LoginStore = create<LoginState>(set => ({
         alert("아이디와 비밀번호를 확인해주세요");
       } else {
         alert("로그인 되었습니다.");
+        
       }
     } catch (error) {
       console.error(error);
@@ -69,7 +70,7 @@ const LoginStore = create<LoginState>(set => ({
     } catch (error) {
       console.error(error);
     }
-    set({ email: "", password: "" });
+    //set({ email: "", password: "" });
   },
   //구글 로그인 및 회원가입 기능
   googleLoginHandler: async e => {
@@ -93,7 +94,29 @@ const LoginStore = create<LoginState>(set => ({
   // 로그아웃 기능(+로그인페이지로 이동하게 수정+clear 기능)
   logoutHandler: async () => {
     const { error } = await supabase.auth.signOut();
-    console.log(error);
-  }
-}));
+    if (error == null) {
+      alert("로그아웃 되었습니다")
+      console.log('sign out')
+  } else {
+    console.log(error)}
+}}));
 export default LoginStore;
+
+//로그아웃 수정 참고할 것.
+// async function signOut() {
+//   const { error } = await client.auth.signOut()
+//   if (error == null) {
+//       showDropdown.value = false
+//       console.log('sign out')
+//       console.log(user.value)
+  
+//       const accessToken = useCookie('sb-access-token')
+//       accessToken.value = ''
+      
+//       useRouter().push('/home')
+//   }
+//   else {
+//       console.log(error)
+//           ...https://jrepository.tistory.com/65
+//https://cpro95.tistory.com/622
+//   }
