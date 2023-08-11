@@ -56,7 +56,7 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
       title,
       content,
       isDone: item.isDone,
-      tag: ["edu", "work", "private", "chore"],
+      tag,
       deadLineDate: deadline,
       important: item.important
     };
@@ -105,7 +105,7 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
           />
         </Space>
 
-        <SelectTags setTag={setTag} />
+        <SelectTags setTag={setTag} item={item} />
         <button type="submit">저장</button>
         <button type="button" onClick={onClickDeleteHandler}>
           삭제

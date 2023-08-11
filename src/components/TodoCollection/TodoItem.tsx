@@ -81,7 +81,7 @@ const TodoItem = ({ item }: Props) => {
           <p>{item.content}</p>
           <p>~{item.deadLineDate}</p>
           {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}
-          {item.tag?.map(tagPiece => {
+          {item.tag.map(tagPiece => {
             return <p key={tagPiece}>{tagPiece}</p>;
           })}
         </StCardBody>

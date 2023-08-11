@@ -11,7 +11,7 @@ import { ITodo } from "supabase/database.types";
 
 const Todo: React.FC = () => {
   const overlay = useOverlay();
-  const { menu } = useMenuStore();
+  const { menu, tag } = useMenuStore();
   const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
 
   const openPromiseToModal = () =>
@@ -34,9 +34,10 @@ const Todo: React.FC = () => {
     await openPromiseToModal();
   };
 
+  // 완료/미완료/중요에 따른 todo
   let Todos = allTodos;
   let todolistTitle = "";
-  // let
+
   if (menu === "1") {
     todolistTitle = "미완료";
     Todos = allTodos?.filter(item => {
@@ -53,6 +54,15 @@ const Todo: React.FC = () => {
       return item.important === true && item.isDone === false;
     });
   }
+
+  // 태그에 따른 todo 보여주기
+  if (tag !== "전체태그") {
+    Todos = Todos?.filter(item => {
+      console.log(item.tag);
+      return item.tag.includes(tag);
+    });
+  }
+
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
   if (Todos) console.log(Todos);

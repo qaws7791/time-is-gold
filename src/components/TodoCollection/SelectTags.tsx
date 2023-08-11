@@ -3,19 +3,21 @@ import { Select } from "antd";
 import type { SelectProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getTags } from "api/tags";
+import { ITodo } from "supabase/database.types";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
+  item?: ITodo;
 }
 
-const SelectTags: React.FC<Props> = ({ setTag }) => {
+const SelectTags: React.FC<Props> = ({ setTag, item }) => {
   const {
     data: allTags,
     isLoading,
     isError
   } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
 
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>(item?.tag || []);
 
   if (isLoading) return <div>로딩중</div>;
   const OPTIONS = allTags;

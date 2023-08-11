@@ -1,72 +1,127 @@
-import { CheckOutlined, AppstoreOutlined, StarOutlined, TagsOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  AppstoreOutlined,
+  StarOutlined,
+  TagsOutlined,
+  MinusOutlined,
+  PlusOutlined
+} from "@ant-design/icons";
 import { Menu } from "antd";
 import type { MenuProps } from "antd/es/menu";
 import useMenuStore from "store/useMenuStore";
 import { PiCheckFatBold } from "react-icons/pi";
 import { PiCheckFatFill } from "react-icons/pi";
+import { styled } from "styled-components";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getTags } from "api/tags";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = [
-  getItem("미완료", "1", <PiCheckFatBold />),
-  getItem("완료", "10", <PiCheckFatFill />),
-  // getItem("완료", "20", <CheckOutlined />),
-  getItem("중요", "20", <StarOutlined />),
-  getItem(
-    "태그",
-    "30",
-    <TagsOutlined />,
-    [getItem("태그 1", "41"), getItem("태그 2", "42")],
-    "group"
-  )
-  // getItem(
-  //   "태그",
-  //   "30",
-  //   <TagsOutlined />,
-  //   [getItem("태그 1", "41"), getItem("태그 2", "42")],
-  //   "group"
-  // )
-];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: "group"
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type
-  } as MenuItem;
-}
-
 const TodoSubMenu = () => {
-  const { menu, changeMenu } = useMenuStore();
-  let selectedKey = "1";
+  // TODO question : 밖으로 빼두신 부분 안으로 옮겼는데 밖으로 빼둔 이유가 있을까요???
+  const queryClient = useQueryClient();
+  const {
+    data: allTags,
+    isLoading,
+    isError
+  } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
+
+  const { tag, menu, changeMenu, changeTag } = useMenuStore();
+
+  if (isLoading) return <div>로딩중</div>;
+
+  const tagItemsArr = allTags.map((tagItem: string, index: string) => {
+    // return getItem(tagItem, String(index + 41));
+    return getItem(tagItem, tagItem);
+  });
+  // tagItemsArr.unshift(getItem("전체태그", "40"));
+  tagItemsArr.unshift(getItem("전체태그", "전체태그"));
+
+  const stateItems: MenuItem[] = [
+    getItem("미완료", "1", <PiCheckFatBold />),
+    getItem("완료", "10", <PiCheckFatFill />),
+    getItem("중요", "20", <StarOutlined />)
+  ];
+
+  const tagItems: MenuItem[] = [getItem("태그", "30", <TagsOutlined />, tagItemsArr, "group")];
+
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+    type?: "group"
+  ): MenuItem {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      type
+    } as MenuItem;
+  }
+
+  // 선택된 거
+  let selectedKeyforState = "1";
+  let selectedKeyfortag = "전체태그";
   if (menu) {
-    for (let i = 0; i < items.length; i++) {
-      if (items[i]!.key === menu) {
-        selectedKey = String(items[i]!.key);
+    for (let i = 0; i < stateItems.length; i++) {
+      if (stateItems[i]!.key === menu) {
+        selectedKeyforState = String(stateItems[i]!.key);
+        break;
+      }
+    }
+    for (let i = 0; i < tagItems.length; i++) {
+      if (tagItems[i]!.key === tag) {
+        selectedKeyfortag = String(tagItems[i]!.key);
         break;
       }
     }
   }
 
   return (
-    <Menu
-      defaultSelectedKeys={[selectedKey]}
-      mode="inline"
-      items={items}
-      onSelect={({ item, key, keyPath, selectedKeys, domEvent }) => {
-        console.log(key);
-        changeMenu(key);
-      }}
-    />
+    <StTodoSubMenuWrapper>
+      <StTagAdditionWrapper>
+        <MinusOutlined className="tagminus" />
+      </StTagAdditionWrapper>
+      <StTagDeletionWrapper>
+        <PlusOutlined className="tagplus" />
+      </StTagDeletionWrapper>
+      <Menu
+        defaultSelectedKeys={[selectedKeyforState]}
+        mode="inline"
+        items={stateItems}
+        onSelect={({ item, key, keyPath, selectedKeys, domEvent }) => {
+          changeMenu(key);
+        }}
+      />
+      <Menu
+        defaultSelectedKeys={[selectedKeyfortag]}
+        mode="inline"
+        items={tagItems}
+        onSelect={({ item, key, keyPath, selectedKeys, domEvent }) => {
+          changeTag(key);
+        }}
+      />
+    </StTodoSubMenuWrapper>
   );
 };
 
 export default TodoSubMenu;
+
+const StTodoSubMenuWrapper = styled.div`
+  position: relative;
+`;
+
+const StTagAdditionWrapper = styled.button`
+  position: absolute;
+  z-index: 2;
+  right: 20px;
+  top: 148px;
+`;
+const StTagDeletionWrapper = styled.button`
+  position: absolute;
+  z-index: 2;
+  right: 50px;
+  top: 148px;
+`;
