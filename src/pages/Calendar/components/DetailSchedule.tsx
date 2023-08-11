@@ -38,7 +38,7 @@ export const DetailSchedule = () => {
         <Space direction={"vertical"} size={"middle"}>
           <Typography.Title level={3}>{title}</Typography.Title>
           <DatePicker.RangePicker defaultValue={[dayjs(start), dayjs(end)]} />
-          <Space wrap size={"middle"}>
+          <Space size={"middle"} style={{ display: "flex", justifyContent: "center" }}>
             <Button type="primary" danger onClick={deleteHandler}>
               삭제
             </Button>

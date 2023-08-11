@@ -85,8 +85,8 @@ export const ModifyCalendarForm = ({ IsModifyHandler, selectedSchedule }: IProps
         <ColorSelect {...colorRegister("#B3E0FF")} />
         <ColorSelect {...colorRegister("#E6CCE6")} />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 7, span: 16 }}>
-        <Space wrap size={"middle"}>
+      <Form.Item style={{ display: "flex", justifyContent: "center" }}>
+        <Space size={"middle"}>
           <Button type="default" onClick={IsModifyHandler}>
             취소
           </Button>

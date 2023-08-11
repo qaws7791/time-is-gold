@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useScheduleIdStore } from "store";
+import { useScheduleStore } from "store";
 import supabase from "supabase";
 import type { ISchedulesInsert, ISchedulesUpdate } from "supabase/database.types";
 
@@ -35,8 +35,10 @@ export const useSchedule = () => {
   };
 
   // 현재 클릭한 일정 ID 값 전역상태로 받아오기
-  const { targetId } = useScheduleIdStore();
+  const { targetId } = useScheduleStore();
   // GET Query
+  if (targetId) {
+  }
   const selectedData = useQuery({
     queryKey: ["schedule", targetId],
     queryFn: () => getFilterData(targetId)

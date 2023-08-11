@@ -5,7 +5,7 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Modal } from "components/common";
 import { useSchedule } from "hooks";
-import { useModalStore, useScheduleIdStore } from "store";
+import { useModalStore, useScheduleStore } from "store";
 import "./Calendar.css";
 import { DetailSchedule, PostCalendarForm } from "./components";
 
@@ -16,7 +16,7 @@ export const Calendar = () => {
 
   const { modalStatus, openModal } = useModalStore(state => state);
 
-  const { getTargetId, getDate } = useScheduleIdStore();
+  const { getTargetId, getDate } = useScheduleStore();
   const eventClick = (info: EventClickArg) => {
     getTargetId(info.event.id);
     openModal("detailSchedule");
