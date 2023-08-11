@@ -7,6 +7,7 @@ import { styled } from "styled-components";
 import TodoModal from "components/TodoCollection/TodoModal";
 import useOverlay from "hooks/useOverlay";
 import useMenuStore from "store/useMenuStore";
+import { ITodo } from "supabase/database.types";
 
 const Todo: React.FC = () => {
   const overlay = useOverlay();
@@ -33,19 +34,25 @@ const Todo: React.FC = () => {
     await openPromiseToModal();
   };
 
-  let Todos;
-  if (menu === "1")
+  let Todos = allTodos;
+  let todolistTitle = "";
+  // let
+  if (menu === "1") {
+    todolistTitle = "미완료";
     Todos = allTodos?.filter(item => {
       return item.isDone === false;
     });
-  else if (menu === "10")
+  } else if (menu === "10") {
+    todolistTitle = "완료";
     Todos = allTodos?.filter(item => {
       return item.isDone === true;
     });
-  else if (menu === "20")
+  } else if (menu === "20") {
+    todolistTitle = "중요";
     Todos = allTodos?.filter(item => {
       return item.important === true && item.isDone === false;
     });
+  }
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
   if (Todos) console.log(Todos);
@@ -53,6 +60,7 @@ const Todo: React.FC = () => {
     <div>
       {/* {isStartForm && <TodoModal />} */}
       <div>
+        <p>{todolistTitle}</p>
         <button onClick={onClickStartForm}>+</button>
       </div>
       <StWrapperTodos>
