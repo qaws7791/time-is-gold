@@ -7,6 +7,7 @@ import { whatIsToday } from "./today";
 import { deleteTodo, updateTodo } from "api/todo";
 import TextArea from "antd/es/input/TextArea";
 import { styled } from "styled-components";
+import SelectTags from "./SelectTags";
 
 interface Props {
   item: ITodo;
@@ -19,6 +20,7 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
   const [title, setTitle] = useState<string>(item.title);
   const [content, setContent] = useState<string>(item.content);
   const [deadline, setDeadline] = useState<string | undefined>(item.deadLineDate);
+  const [tag, setTag] = useState<string[]>([]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.target.name === "title") {
@@ -54,7 +56,7 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
       title,
       content,
       isDone: item.isDone,
-      tag: { edu: false },
+      tag: ["edu", "work", "private", "chore"],
       deadLineDate: deadline,
       important: item.important
     };
@@ -103,7 +105,7 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
           />
         </Space>
 
-        <input type="text" name="tag" defaultValue={"여기는 일단 보류"} />
+        <SelectTags setTag={setTag} />
         <button type="submit">저장</button>
         <button type="button" onClick={onClickDeleteHandler}>
           삭제

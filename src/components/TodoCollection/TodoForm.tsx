@@ -3,9 +3,11 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { whatIsToday } from "./today";
 import { postTodo } from "api/todo";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ITodoforInsert } from "supabase/database.types";
 import { styled } from "styled-components";
+import SelectTags from "./SelectTags";
+import { getTags } from "api/tags";
 
 const { TextArea } = Input;
 
@@ -21,6 +23,8 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [deadline, setDeadline] = useState<string | undefined>(whatIsToday());
+  const [tag, setTag] = useState<string[]>([]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.target.name === "title") {
       setTitle(e.target.value);
@@ -28,10 +32,9 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
       setContent(e.target.value);
     }
   };
-  console.log("dddddd", dayjs(deadline));
+
   const onDayChange = (e: dayjs.Dayjs | null) => {
     const checkDate = e?.format().split("T")[0];
-    console.log("✅", checkDate);
     setDeadline(checkDate);
   };
 
@@ -53,7 +56,7 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
       title,
       content,
       isDone: false,
-      tag: { edu: false },
+      tag,
       deadLineDate: deadline,
       important: false
     };
@@ -97,7 +100,7 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
           />
         </Space>
 
-        <input type="text" name="tag" defaultValue={"여기는 일단 보류"} />
+        <SelectTags setTag={setTag} />
         <button type="submit">저장</button>
         <button type="button" onClick={onClickCloseHandler}>
           닫기
