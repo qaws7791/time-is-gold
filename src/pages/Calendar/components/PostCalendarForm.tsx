@@ -1,14 +1,13 @@
-import { Button, DatePicker, DatePickerProps, Input, Space, Switch, Typography } from "antd";
+import { Button, DatePicker, DatePickerProps, Form, Input, Space, Switch, Typography } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
-import { FormEvent, useState } from "react";
-import useScheduleIdStore from "store/useScheduleStore";
-import { postData } from "supabase/db";
-import { TColor } from "./Calendar.type";
-import { ColorSelect, FlexBox, StyleForm } from "./CalendarForm.style";
-import useInputForm from "./useInputForm";
+import { useCalendarForm, useSchedule } from "hooks";
+import { useState } from "react";
+import { useModalStore, useScheduleIdStore } from "store";
+import type { TBackgroundColor } from "supabase/database.types";
+import { ColorSelect } from "../Calendar.style";
 
-const PostCalendarForm = () => {
+export const PostCalendarForm = () => {
   const { selectDate } = useScheduleIdStore();
 
   const initialValue = {
@@ -16,14 +15,18 @@ const PostCalendarForm = () => {
     title: "",
     start: selectDate[0],
     end: selectDate[1],
-    backgroundColor: "#FFD1DF" as TColor
+    backgroundColor: "#FFD1DF" as TBackgroundColor
   };
 
-  const { inputValue, setInputValue, register, colorRegister } = useInputForm(initialValue);
+  const { inputValue, setInputValue, register, colorRegister } = useCalendarForm(initialValue);
+  const { postMutation } = useSchedule();
+  const { closeModal } = useModalStore();
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    postData(inputValue);
+  // event: FormEvent<HTMLFormElement>
+  // event.preventDefault();
+  const onSubmit = async () => {
+    postMutation.mutate(inputValue);
+    closeModal("postCalendarForm");
   };
 
   const [isAllDay, setIsAllDay] = useState(true);
@@ -37,7 +40,7 @@ const PostCalendarForm = () => {
   };
 
   return (
-    <StyleForm onSubmit={onSubmit}>
+    <Form onFinish={onSubmit}>
       <Input {...register("email")} size="large" placeholder="email" />
       <Input {...register("title")} size="large" placeholder="Title" />
       <Space size={40}>
@@ -57,18 +60,17 @@ const PostCalendarForm = () => {
           onChange={onChangDateHandler}
         />
       )}
-      <FlexBox>
+      <Space>
         <ColorSelect {...colorRegister("#FFD1DF")} defaultChecked />
         <ColorSelect {...colorRegister("#FFE0B2")} />
         <ColorSelect {...colorRegister("#D0F0C0")} />
         <ColorSelect {...colorRegister("#B3E0FF")} />
         <ColorSelect {...colorRegister("#E6CCE6")} />
-      </FlexBox>
+      </Space>
       <Button type="primary" htmlType="submit">
         작성하기
       </Button>
       <Space wrap size={"middle"}></Space>
-    </StyleForm>
+    </Form>
   );
 };
-export default PostCalendarForm;

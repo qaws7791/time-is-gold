@@ -1,10 +1,12 @@
+export type TBackgroundColor = "#FFD1DF" | "#FFE0B2" | "#D0F0C0" | "#B3E0FF" | "#E6CCE6";
+
 export interface ISchedulesRow {
-  id: number;
+  id: string;
   email: string;
   title: string;
   start: string;
   end: string;
-  backgroundColor: string;
+  backgroundColor: TBackgroundColor;
 }
 
 export interface ISchedulesInsert {
@@ -12,7 +14,7 @@ export interface ISchedulesInsert {
   title: string;
   start: string;
   end: string;
-  backgroundColor: number;
+  backgroundColor: TBackgroundColor;
 }
 
 export interface ISchedulesUpdate {
@@ -20,7 +22,7 @@ export interface ISchedulesUpdate {
   title?: string;
   start?: string;
   end?: string;
-  backgroundColor?: number;
+  backgroundColor?: string;
 }
 
 export interface Database {
