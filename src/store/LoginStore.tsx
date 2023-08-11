@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import supabase from "supabase/index";
 
+
 interface LoginState {
   email: string;
   password: string;
@@ -44,13 +45,12 @@ const LoginStore = create<LoginState>(set => ({
         alert("아이디와 비밀번호를 확인해주세요");
       } else {
         alert("로그인 되었습니다.");
-        
       }
     } catch (error) {
       console.error(error);
     }
   },
-  // 회원가입 기능(+회원가입 하면 바로 로그인기능 추가?)
+  // 회원가입 기능
   signupHandler: async e => {
     e.preventDefault();
     try {
@@ -70,7 +70,6 @@ const LoginStore = create<LoginState>(set => ({
     } catch (error) {
       console.error(error);
     }
-    //set({ email: "", password: "" });
   },
   //구글 로그인 및 회원가입 기능
   googleLoginHandler: async e => {
@@ -85,6 +84,7 @@ const LoginStore = create<LoginState>(set => ({
           }
         }
       });
+      console.log(data);
       if (error) console.error(error);
     } catch (error) {
       console.error(error);
@@ -94,28 +94,11 @@ const LoginStore = create<LoginState>(set => ({
   logoutHandler: async () => {
     const { error } = await supabase.auth.signOut();
     if (error == null) {
-      alert("로그아웃 되었습니다")
-      console.log('sign out')
-  } else {
-    console.log(error)}
-}}));
+      alert("로그아웃 되었습니다");
+      console.log("sign out");
+    } else {
+      console.log(error);
+    }
+  }
+}));
 export default LoginStore;
-
-//로그아웃 수정 참고할 것.
-// async function signOut() {
-//   const { error } = await client.auth.signOut()
-//   if (error == null) {
-//       showDropdown.value = false
-//       console.log('sign out')
-//       console.log(user.value)
-  
-//       const accessToken = useCookie('sb-access-token')
-//       accessToken.value = ''
-      
-//       useRouter().push('/home')
-//   }
-//   else {
-//       console.log(error)
-//           ...https://jrepository.tistory.com/65
-//https://cpro95.tistory.com/622
-//   }

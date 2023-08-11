@@ -1,5 +1,6 @@
 import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
+import { useNavigate } from 'react-router';
 import LoginStore from "store/LoginStore";
 import * as St from "style/loginStyled";
 
@@ -11,8 +12,8 @@ const LoginForm = () => {
     PasswordChangeHandler,
     loginHandler,
     googleLoginHandler,
-    clear
   } = LoginStore();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
@@ -67,6 +68,7 @@ const LoginForm = () => {
               onClick={e => {
                 loginHandler(e);
                 resetField(e); // 로그인 시에 password 필드 초기화
+                navigate("/calendar")
               }}
             >
               로그인
