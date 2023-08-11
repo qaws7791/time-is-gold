@@ -46,10 +46,9 @@ const Login = () => {
             </Tabs.TabPane>
           ))}
         </Tabs>
-     {/*   <Button onClick={() => logoutHandler()}>로그아웃</Button>*/}
+        {/*   <Button onClick={() => logoutHandler()}>로그아웃</Button>*/}
       </St.LogInTabs>
     </St.Grid>
-           
   );
 };
 
