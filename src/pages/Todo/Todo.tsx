@@ -34,16 +34,18 @@ const Todo: React.FC = () => {
   };
 
   let Todos;
-  if (menu === "1") Todos = allTodos;
-  else if (menu === "10")
+  if (menu === "1")
     Todos = allTodos?.filter(item => {
-      return item.important === true && item.isDone === false;
+      return item.isDone === false;
     });
-  else if (menu === "20")
+  else if (menu === "10")
     Todos = allTodos?.filter(item => {
       return item.isDone === true;
     });
-
+  else if (menu === "20")
+    Todos = allTodos?.filter(item => {
+      return item.important === true && item.isDone === false;
+    });
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
   if (Todos) console.log(Todos);

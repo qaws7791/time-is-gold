@@ -2,13 +2,16 @@ import { CheckOutlined, AppstoreOutlined, StarOutlined, TagsOutlined } from "@an
 import { Menu } from "antd";
 import type { MenuProps } from "antd/es/menu";
 import useMenuStore from "store/useMenuStore";
+import { PiCheckFatBold } from "react-icons/pi";
+import { PiCheckFatFill } from "react-icons/pi";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
-  getItem("전체", "1", <AppstoreOutlined />),
-  getItem("중요", "10", <StarOutlined />),
-  getItem("완료", "20", <CheckOutlined />),
+  getItem("미완료", "1", <PiCheckFatBold />),
+  getItem("완료", "10", <PiCheckFatFill />),
+  // getItem("완료", "20", <CheckOutlined />),
+  getItem("중요", "20", <StarOutlined />),
   getItem(
     "태그",
     "30",
@@ -16,6 +19,13 @@ const items: MenuItem[] = [
     [getItem("태그 1", "41"), getItem("태그 2", "42")],
     "group"
   )
+  // getItem(
+  //   "태그",
+  //   "30",
+  //   <TagsOutlined />,
+  //   [getItem("태그 1", "41"), getItem("태그 2", "42")],
+  //   "group"
+  // )
 ];
 
 function getItem(
