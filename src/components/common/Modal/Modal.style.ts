@@ -34,6 +34,7 @@ export const Inner = styled.div`
 
   background-color: #ffffff;
   border-radius: 20px;
+  /* border: 2px solid black; */
 `;
 
 export const Form = styled.form`

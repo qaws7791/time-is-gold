@@ -1,19 +1,5 @@
 import { styled } from "styled-components";
 
-export const StyleForm = styled.form`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-
-  margin: 50px;
-`;
-
-export const FlexBox = styled.div`
-  display: flex;
-`;
-
 export const ColorSelect = styled.input`
   &[type="radio"] {
     appearance: none;
