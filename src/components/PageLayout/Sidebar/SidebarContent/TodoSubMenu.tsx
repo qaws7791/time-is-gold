@@ -14,10 +14,16 @@ import { PiCheckFatFill } from "react-icons/pi";
 import { styled } from "styled-components";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTags } from "api/tags";
+import { BaseModal } from "components/common";
+import { useState } from "react";
+import TagAddtionModal from "../SidebarTagModal/TagAddtionModal";
+import TagDeletionModal from "../SidebarTagModal/TagDeletionModal";
+import useOverlay from "hooks/useOverlay";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const TodoSubMenu = () => {
+  const overlay = useOverlay();
   // TODO question : 밖으로 빼두신 부분 안으로 옮겼는데 밖으로 빼둔 이유가 있을까요???
   const queryClient = useQueryClient();
   const {
@@ -79,14 +85,47 @@ const TodoSubMenu = () => {
     }
   }
 
+  const openPromiseAddTagModal = () =>
+    new Promise(resolve => {
+      overlay.open(({ close }) => (
+        <TagAddtionModal
+          allTags={allTags}
+          onConfirm={() => {
+            resolve(true);
+            close();
+          }}
+          onClose={() => {
+            resolve(false);
+            close();
+          }}
+        />
+      ));
+    });
+
+  const openPromiseDeleteTagModal = () =>
+    new Promise(resolve => {
+      overlay.open(({ close }) => (
+        <TagDeletionModal
+          onConfirm={() => {
+            resolve(true);
+            close();
+          }}
+          onClose={() => {
+            resolve(false);
+            close();
+          }}
+        />
+      ));
+    });
+
   return (
     <StTodoSubMenuWrapper>
-      <StTagAdditionWrapper>
-        <MinusOutlined className="tagminus" />
-      </StTagAdditionWrapper>
-      <StTagDeletionWrapper>
-        <PlusOutlined className="tagplus" />
-      </StTagDeletionWrapper>
+      <StDeletionTagPosition>
+        <PlusOutlined className="tagplus" onClick={openPromiseAddTagModal} />
+      </StDeletionTagPosition>
+      <StAdditionTagPosition>
+        <MinusOutlined className="tagminus" onClick={openPromiseDeleteTagModal} />
+      </StAdditionTagPosition>
       <Menu
         defaultSelectedKeys={[selectedKeyforState]}
         mode="inline"
@@ -113,15 +152,15 @@ const StTodoSubMenuWrapper = styled.div`
   position: relative;
 `;
 
-const StTagAdditionWrapper = styled.button`
+const StAdditionTagPosition = styled.div`
   position: absolute;
-  z-index: 2;
+  /* z-index: 1; */
   right: 20px;
   top: 148px;
 `;
-const StTagDeletionWrapper = styled.button`
+const StDeletionTagPosition = styled.div`
   position: absolute;
-  z-index: 2;
+  /* z-index: 1; */
   right: 50px;
   top: 148px;
 `;
