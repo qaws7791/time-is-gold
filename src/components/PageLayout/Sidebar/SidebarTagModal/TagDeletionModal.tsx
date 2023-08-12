@@ -1,3 +1,12 @@
+// tag 삭제시 todo에 있는 해당 tag도 삭제해야함.
+/* tag 삭제버튼 누르면 → 
+  1. [supabase] tags table에 email일치 항목 -> filter 해주기
+  2. [supabase] Todos table에 로그인 사용자의 todo 다 가져와서 전부 filtring하고 다시 넣어주기
+      -  email일치 todo들 다 가져오기
+      -  각 todo
+
+*/
+
 import { BaseModal } from "components/common";
 import useClickOutside from "hooks/useClickOutside";
 import { useRef } from "react";

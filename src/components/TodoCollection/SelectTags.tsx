@@ -4,6 +4,14 @@ import type { SelectProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getTags } from "api/tags";
 import { ITodo } from "supabase/database.types";
+import {
+  CheckOutlined,
+  AppstoreOutlined,
+  StarOutlined,
+  TagsOutlined,
+  MinusOutlined,
+  PlusOutlined
+} from "@ant-design/icons";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
