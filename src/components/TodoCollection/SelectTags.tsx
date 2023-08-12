@@ -4,18 +4,15 @@ import type { SelectProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getTags } from "api/tags";
 import { ITodo } from "supabase/database.types";
-import {
-  CheckOutlined,
-  AppstoreOutlined,
-  StarOutlined,
-  TagsOutlined,
-  MinusOutlined,
-  PlusOutlined
-} from "@ant-design/icons";
+import { FaCircle } from "react-icons/fa";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
   item?: ITodo;
+}
+interface TagItemType {
+  tagName: string;
+  tagNumber: string;
 }
 
 const SelectTags: React.FC<Props> = ({ setTag, item }) => {
@@ -28,28 +25,57 @@ const SelectTags: React.FC<Props> = ({ setTag, item }) => {
   const [selectedItems, setSelectedItems] = useState<string[]>(item?.tag || []);
 
   if (isLoading) return <div>로딩중</div>;
-  const OPTIONS = allTags;
+  const OPTIONS: TagItemType[] = allTags;
 
   const onChangeSelectItems = (e: string[]) => {
     setSelectedItems(e);
     setTag(e);
   };
 
-  const filteredOptions =
-    selectedItems.length >= 3 ? [] : OPTIONS.filter((o: string) => !selectedItems.includes(o));
+  let filteredOptions: string[] | undefined = [];
+  if (selectedItems.length >= 3) {
+    filteredOptions = [];
+  } else {
+    filteredOptions = OPTIONS.filter((o: TagItemType) => {
+      let compareItem: string = o.tagNumber;
+      return !selectedItems.includes(compareItem);
+    }).map(o => {
+      return o.tagNumber;
+    });
+  }
+
+  // const labelJSX = `${<div><FaCircle/><span></span></div>}`
 
   return (
     <Select
       mode="multiple"
-      placeholder="Inserted are removed"
+      placeholder="태그를 추가해보세요"
       value={selectedItems}
       // onChange={setSelectedItems}
       onChange={onChangeSelectItems}
       style={{ width: "100%" }}
-      options={filteredOptions.map((item: string) => ({
-        value: item,
-        label: item
-      }))}
+      options={filteredOptions.map((item: string) => {
+        let tagColor = "";
+        if (item === "1") tagColor = "#FFD1DF";
+        else if (item === "2") tagColor = "#FFE0B2";
+        else if (item === "3") tagColor = "#D0F0C0";
+        else if (item === "4") tagColor = "#B3E0FF";
+        else if (item === "5") tagColor = "#E6CCE6";
+        const targetTagfromDB = allTags.find(
+          (tagObject: TagItemType) => tagObject.tagNumber === item
+        );
+        return {
+          value: item,
+          // value: "이거를 보여주나봐",
+          // value: "이거를 보여주나봐",
+          label: (
+            <>
+              <FaCircle style={{ fill: tagColor }} />
+              <span>{targetTagfromDB.tagName}</span>
+            </>
+          )
+        };
+      })}
     />
   );
   // const {

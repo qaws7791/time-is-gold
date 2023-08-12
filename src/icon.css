@@ -1,14 +1,14 @@
-.gray {
+/* .gray {
   fill: #eee;
-}
+} */
 
 .black {
   fill: #000;
 }
 
 .isDoneCheck {
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
 }
 
 .star {
@@ -24,6 +24,11 @@
   top: 0; */
 }
 
+.todoPlus_button {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
 
 .tagplus {
   cursor: pointer;

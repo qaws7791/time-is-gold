@@ -10,6 +10,8 @@ interface UpdatedTagProps {
 // 로그인한 사용자에 대한  tags 모음 부르기
 export const getTags = async (userId: string) => {
   const { data } = await supabase.from("tags").select().eq("userId", "jieun2563@naver.com");
+
+  // 특정 user의 각 태그들이 tags에 배열 형태로 들어가있는 상태
   const tags = data?.[0].tag;
   return tags;
 };

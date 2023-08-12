@@ -1,5 +1,5 @@
 // TODO 할일 추가 전역으로 관리하는 모달로 띄울 예정 (일단 임시 생성)
-
+import { PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "api/todo";
 import TodoItem from "../../components/TodoCollection/TodoItem";
@@ -7,12 +7,18 @@ import { styled } from "styled-components";
 import TodoModal from "components/TodoCollection/TodoModal";
 import useOverlay from "hooks/useOverlay";
 import useMenuStore from "store/useMenuStore";
-import { ITodo } from "supabase/database.types";
+// import { ITodo } from "upabase/database.types";
+import { getTags } from "api/tags";
+import { FaPlus } from "react-icons/fa6";
 
 const Todo: React.FC = () => {
   const overlay = useOverlay();
   const { menu, tag } = useMenuStore();
-  const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
+  const {
+    data: allTodos,
+    isLoading: allTodosIsLoading,
+    isError: allTodosIsError
+  } = useQuery(["todos"], getTodos);
 
   const openPromiseToModal = () =>
     new Promise(resolve => {
@@ -30,7 +36,7 @@ const Todo: React.FC = () => {
       ));
     });
 
-  const onClickStartForm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onClickStartForm = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     await openPromiseToModal();
   };
 
@@ -63,22 +69,22 @@ const Todo: React.FC = () => {
     });
   }
 
-  if (isLoading) return <div>내 투두 주이소</div>;
-  if (isError) return <div>에러남</div>;
+  if (allTodosIsLoading) return <div>내 투두 주이소</div>;
+  if (allTodosIsError) return <div>에러남</div>;
   if (Todos) console.log(Todos);
   return (
-    <div>
+    <StWrapper>
       {/* {isStartForm && <TodoModal />} */}
-      <div>
+      <StTodosHeader>
         <p>{todolistTitle}</p>
-        <button onClick={onClickStartForm}>+</button>
-      </div>
+        <FaPlus className="todoPlus_button" onClick={onClickStartForm} />
+      </StTodosHeader>
       <StWrapperTodos>
         {Todos?.sort((a, b) => a.id - b.id).map(item => {
           return <TodoItem key={item.id} item={item} />;
         })}
       </StWrapperTodos>
-    </div>
+    </StWrapper>
   );
 };
 export default Todo;
@@ -90,11 +96,28 @@ export default Todo;
 이 테이블을 생성한 후 정책을 생성할 수 있습니다.
 */
 
+const StWrapper = styled.div`
+  margin: 20px;
+`;
+
 const StWrapperTodos = styled.div`
   padding: 10px;
   width: 100%;
-  height: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  place-items: center;
+  grid-gap: 20px;
+`;
+
+const StTodosHeader = styled.div`
+  height: 35px;
+  margin-bottom: 20px;
+  display: flex;
+
+  align-items: center;
+  gap: 20px;
+  & p {
+    font-size: 30px;
+  }
 `;

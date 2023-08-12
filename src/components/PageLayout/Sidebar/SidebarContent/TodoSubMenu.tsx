@@ -19,8 +19,13 @@ import { useState } from "react";
 import TagAddtionModal from "../SidebarTagModal/TagAddtionModal";
 import TagDeletionModal from "../SidebarTagModal/TagDeletionModal";
 import useOverlay from "hooks/useOverlay";
+import { FaCircle } from "react-icons/fa";
 
 type MenuItem = Required<MenuProps>["items"][number];
+interface TagItemType {
+  tagName: string;
+  tagNumber: string;
+}
 
 const TodoSubMenu = () => {
   const overlay = useOverlay();
@@ -36,12 +41,19 @@ const TodoSubMenu = () => {
 
   if (isLoading) return <div>로딩중</div>;
 
-  const tagItemsArr = allTags.map((tagItem: string, index: string) => {
+  const tagItemsArr = allTags.map((tagItem: TagItemType, index: string) => {
     // return getItem(tagItem, String(index + 41));
-    return getItem(tagItem, tagItem);
+    let color = "";
+    if (tagItem.tagNumber === "1") color = "#FFD1DF";
+    else if (tagItem.tagNumber === "2") color = "#FFE0B2";
+    else if (tagItem.tagNumber === "3") color = "#D0F0C0";
+    else if (tagItem.tagNumber === "4") color = "#B3E0FF";
+    else if (tagItem.tagNumber === "5") color = "#E6CCE6";
+    return getItem(tagItem.tagName, tagItem.tagNumber, <FaCircle style={{ fill: color }} />);
   });
   // tagItemsArr.unshift(getItem("전체태그", "40"));
-  tagItemsArr.unshift(getItem("전체태그", "전체태그"));
+  // getItem 두번째 파라미터가 zustand 상태관리로 보내지는거, 첫 파라미터가 눈에 보이는 이름
+  tagItemsArr.unshift(getItem("전체태그", "전체태그", <AppstoreOutlined />));
 
   const stateItems: MenuItem[] = [
     getItem("미완료", "1", <PiCheckFatBold />),
@@ -120,12 +132,12 @@ const TodoSubMenu = () => {
 
   return (
     <StTodoSubMenuWrapper>
-      <StDeletionTagPosition>
+      {/* <StDeletionTagPosition>
         <PlusOutlined className="tagplus" onClick={openPromiseAddTagModal} />
       </StDeletionTagPosition>
       <StAdditionTagPosition>
         <MinusOutlined className="tagminus" onClick={openPromiseDeleteTagModal} />
-      </StAdditionTagPosition>
+      </StAdditionTagPosition> */}
       <Menu
         defaultSelectedKeys={[selectedKeyforState]}
         mode="inline"

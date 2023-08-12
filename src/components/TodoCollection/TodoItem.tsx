@@ -1,22 +1,35 @@
 // TODO tag는 후순위로 미루기 (할 때 datatype등 다시 설정해줘야함)
 import { ITodo } from "supabase/database.types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { checkTodoImportance, switchTodo } from "api/todo";
 import { styled } from "styled-components";
-import { AiOutlineCheck } from "react-icons/ai";
 import "../../icon.css";
 import useOverlay from "hooks/useOverlay";
 import TodoUpdateModal from "./TodoUpdateModal";
-import { TiStarFullOutline } from "react-icons/ti";
-import { TiStarOutline } from "react-icons/ti";
+import { AiOutlineCheck } from "react-icons/ai";
+import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
+import { FaCircle, FaCheck } from "react-icons/fa";
+import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
+import { getTags } from "api/tags";
+import { Tag, Space } from "antd";
 
 type Props = {
   item: ITodo;
 };
+interface TagItemType {
+  tagName: string;
+  tagNumber: string;
+}
 
 export type isDoneType = { isDone: boolean };
 const TodoItem = ({ item }: Props) => {
+  console.log("item :", item);
   const overlay = useOverlay();
+  const {
+    data: allTags,
+    isLoading: allTagsIsLoading,
+    isError: allTagsIsError
+  } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
 
   const queryClient = useQueryClient();
 
@@ -40,7 +53,6 @@ const TodoItem = ({ item }: Props) => {
   // const onClickUpdateHandler = () => {
   //   setIsStartForm(true);
   // };
-  const isDoneIconCss = item.isDone ? "black isDoneCheck" : "gray isDoneCheck";
 
   const openPromiseToUpdateModal = () =>
     new Promise(resolve => {
@@ -64,27 +76,61 @@ const TodoItem = ({ item }: Props) => {
     const important: boolean = !item.important;
     todoImportantMutation.mutate({ id: item.id, important });
   };
+
+  if (!item) return <p>로딩중</p>;
+  if (!allTags) return <p>로딩중</p>;
+
   return (
     <>
       {/* {isStartForm && <TodoUpdateForm item={item} setIsStartForm={setIsStartForm} />} */}
       <StTodoCardWrapper onClick={openPromiseToUpdateModal}>
         <StCardHeader>
-          <h3>{item.title}</h3>
-          <AiOutlineCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} />
+          <TodoTitle>{item.title}</TodoTitle>
+          {/* <FaCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} /> */}
+          {/* <FaCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} /> */}
+          {item.isDone ? (
+            <PiCheckFatFill className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+          ) : (
+            <PiCheckFatBold className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+          )}
         </StCardHeader>
         <StCardBody>
-          {item.important ? (
-            <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
-          ) : (
-            <TiStarOutline className="star" onClick={onClickCheckImportance} />
-          )}
-          <p>{item.content}</p>
-          <p>~{item.deadLineDate}</p>
-          {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}
-          {item.tag.map(tagPiece => {
-            return <p key={tagPiece}>{tagPiece}</p>;
-          })}
+          <ContentIconBox>
+            <TodoContent>{item.content}</TodoContent>
+            {item.important ? (
+              <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
+            ) : (
+              <TiStarOutline className="star" onClick={onClickCheckImportance} />
+            )}
+          </ContentIconBox>
         </StCardBody>
+
+        {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}
+        <StTagBox>
+          {item.tag?.map(tagPiece => {
+            let tagColor = "";
+            if (tagPiece === "1") tagColor = "magenta";
+            else if (tagPiece === "2") tagColor = "volcano";
+            else if (tagPiece === "3") tagColor = "green";
+            else if (tagPiece === "4") tagColor = "blue";
+            else if (tagPiece === "5") tagColor = "purple";
+            // if (tagPiece === "1") tagColor = "#FFD1DF";
+            // else if (tagPiece === "2") tagColor = "#FFE0B2";
+            // else if (tagPiece === "3") tagColor = "#D0F0C0";
+            // else if (tagPiece === "4") tagColor = "#B3E0FF";
+            // else if (tagPiece === "5") tagColor = "#E6CCE6";
+            const targetTagfromDB = allTags?.find(
+              (tagObject: TagItemType) => tagObject.tagNumber === tagPiece
+            );
+            return (
+              <Tag key={tagPiece} color={tagColor}>
+                {/* <FaCircle style={{ fill: tagColor }} /> */}
+                {targetTagfromDB.tagName}
+              </Tag>
+            );
+          })}
+        </StTagBox>
+        <StTodoDeadLineDate>~{item.deadLineDate}</StTodoDeadLineDate>
       </StTodoCardWrapper>
     </>
   );
@@ -93,24 +139,81 @@ const TodoItem = ({ item }: Props) => {
 export default TodoItem;
 
 const StTodoCardWrapper = styled.div`
-  border: 1px solid black;
+  position: relative;
+
+  width: 355px;
+  height: 250px;
+
   margin: 10px;
+
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  border-color: #d6d6d6;
   cursor: pointer;
-  width: 300px;
-  height: 200px;
 `;
 
 const StCardHeader = styled.div`
-  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  height: 20%;
+
   padding: 10px 20px;
+
   border-bottom: 1px solid #eee;
+
+  box-sizing: border-box;
+  gap: 0 15px 0 0;
+`;
+
+const TodoTitle = styled.p`
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const StCardBody = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  flex: 1;
+
+  height: 60%;
+
+  padding: 0 20px;
+`;
+
+const ContentIconBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 5px;
+  gap: 10px;
+`;
+
+const TodoContent = styled.p`
+  width: 90%;
+
+  margin-top: 5px;
+
+  font-size: 15px;
+  font-weight: 550;
+  line-height: 25px;
+`;
+
+const StTodoDeadLineDate = styled.p`
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+
+  color: gray;
+  font-size: 17px;
+`;
+
+const StTagBox = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  margin-left: 30px;
 `;
