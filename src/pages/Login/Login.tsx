@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button, Tabs } from "antd";
 import supabase from "supabase/index";
-import LoginStore from "store/LoginStore";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "components/Login/LoginForm";
 import SignUpForm from "components/Login/SignUpForm";
 import timeisgold2 from "assets/timeisgold2.png";
 import * as St from "style/loginStyled";
+import { StyleProvider, legacyLogicalPropertiesTransformer } from '@ant-design/cssinjs';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const Login = () => {
         if (value.data?.user) {
           console.log(value.data.user);
           setUser(value.data.user);
+          value.data.user !== null ? navigate("/calendar") : navigate("/login");
         }
       });
     }
@@ -36,6 +37,7 @@ const Login = () => {
   ];
 
   return (
+    <StyleProvider transformers={[legacyLogicalPropertiesTransformer]}>
     <St.Grid>
       <div>
         <St.MainImg src={timeisgold2} alt="시간은 금이다 사진" />
@@ -50,6 +52,7 @@ const Login = () => {
         </Tabs>
       </St.LogInTabs>
     </St.Grid>
+    </StyleProvider>
   );
 };
 

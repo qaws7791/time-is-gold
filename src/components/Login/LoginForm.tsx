@@ -1,6 +1,7 @@
-import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router";
+import google from "assets/google.png";
 import LoginStore from "store/LoginStore";
 import * as St from "style/loginStyled";
 
@@ -11,9 +12,8 @@ const LoginForm = () => {
     EmailChangeHandler,
     PasswordChangeHandler,
     loginHandler,
-    googleLoginHandler,
+    googleLoginHandler
   } = LoginStore();
-  const navigate = useNavigate();
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
@@ -34,9 +34,10 @@ const LoginForm = () => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
       >
-        <Form.Item name="email" rules={[{ required: true, message: "Please input your E-mail!" }]}>
+        <Form.Item name="email" rules={[{ required: true, message: "이메일을 입력해주세요!" }]}>
           <Input
-            prefix={<MailOutlined className="site-form-item-icon" />}
+            status="warning"
+            prefix={<MailOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="text"
             placeholder="e-mail"
             value={email}
@@ -46,10 +47,11 @@ const LoginForm = () => {
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
+          rules={[{ required: true, message: "비밀번호를 입력해주세요!" }]}
         >
           <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
+            status="warning"
+            prefix={<LockOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="password"
             placeholder="password"
             value={password}
@@ -61,14 +63,12 @@ const LoginForm = () => {
         <St.Flex>
           <Form.Item>
             <Button
-              type="primary"
               htmlType="submit"
+              type="link"
               className="login-form-button"
-              style={{ backgroundColor: "yellow" }}
               onClick={e => {
                 loginHandler(e);
-                resetField(e); // 로그인 시에 password 필드 초기화
-                navigate("/calendar")
+                resetField(e);
               }}
             >
               로그인
@@ -76,13 +76,10 @@ const LoginForm = () => {
 
             <Space direction="vertical">
               <Space wrap>
-                <Button
-                  type="primary"
-                  icon={<GoogleOutlined />}
-                  style={{ backgroundColor: "yellow" }}
-                  onClick={googleLoginHandler}
-                >
-                  구글 로그인
+                <Button type="link" onClick={googleLoginHandler}>
+                  <St.GoogleLoginImgFlex>
+                    <St.GoogleImg src={google} alt="구글로고" /> 구글 로그인
+                  </St.GoogleLoginImgFlex>
                 </Button>
               </Space>
             </Space>

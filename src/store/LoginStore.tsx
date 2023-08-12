@@ -60,12 +60,13 @@ const LoginStore = create<LoginState>(set => ({
         email,
         password
       });
-      console.log(data);
+      
       if (error) {
         console.error(error);
         alert("아이디와 비밀번호를 확인해주세요");
       } else {
         alert("회원가입이 되었습니다.");
+        
       }
     } catch (error) {
       console.error(error);
@@ -99,6 +100,7 @@ const LoginStore = create<LoginState>(set => ({
     } else {
       console.log(error);
     }
-  }
+  },
+
 }));
 export default LoginStore;
