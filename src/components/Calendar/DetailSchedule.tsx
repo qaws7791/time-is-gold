@@ -1,5 +1,5 @@
-import { PoweroffOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Space, Typography } from "antd";
+import { Button, Space, Typography } from "antd";
+import { IsLoading } from "components/PageLayout";
 import dayjs from "dayjs";
 import { useSchedule } from "hooks";
 import { useState } from "react";
@@ -18,19 +18,22 @@ export const DetailSchedule = () => {
   const { data: selectedSchedule, isError, isLoading } = selectedData;
 
   const deleteHandler = () => {
-    deleteMutation.mutate(selectedSchedule.id);
-    closeModal("detailSchedule");
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      deleteMutation.mutate(selectedSchedule.id);
+      closeModal("detailSchedule");
+    }
   };
 
-  // TODO isLoading 컴포넌트 만들기
   if (isLoading && selectedSchedule === undefined) {
-    return <Button type="text" icon={<PoweroffOutlined />} loading />;
+    return <IsLoading />;
   }
 
-  // TODO isError 컴포넌트 만들기
   if (isError) return <p>에러</p>;
 
   const { title, start, end } = selectedSchedule;
+
+  const showDate = (date: string) =>
+    date.length === 10 ? dayjs(date).format("YYYY-MM-DD") : dayjs(date).format("YYYY-MM-DD HH:mm");
 
   return (
     <>
@@ -39,7 +42,7 @@ export const DetailSchedule = () => {
       )) || (
         <Space direction={"vertical"} size={"middle"}>
           <Typography.Title level={3}>{title}</Typography.Title>
-          <DatePicker.RangePicker defaultValue={[dayjs(start), dayjs(end)]} />
+          <Typography>{`${showDate(start)} ~ ${showDate(end)}`}</Typography>
           <Space size={"middle"} style={{ display: "flex", justifyContent: "center" }}>
             <Button type="primary" danger onClick={deleteHandler}>
               삭제

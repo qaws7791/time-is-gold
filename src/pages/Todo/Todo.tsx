@@ -1,16 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { IsLoading } from "components/PageLayout";
 import TodoItem from "components/TodoCollection/TodoItem";
 import TodoModal from "components/TodoCollection/TodoModal";
+import { useTodo } from "hooks";
 import useOverlay from "hooks/useOverlay";
 import { FaPlus } from "react-icons/fa6";
 import useMenuStore from "store/useMenuStore";
 import { styled } from "styled-components";
-import { getTodos } from "supabase/todo";
 
-const Todo: React.FC = () => {
+const Todo = () => {
   const overlay = useOverlay();
   const { menu, tag } = useMenuStore();
-  const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
+  const { response } = useTodo();
+  const { data: allTodos, isError, isLoading } = response;
 
   const openPromiseToModal = () =>
     new Promise(resolve => {
@@ -28,20 +29,20 @@ const Todo: React.FC = () => {
       ));
     });
 
-  const onClickStartForm = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const onClickStartForm = async () => {
     await openPromiseToModal();
   };
 
-  if (isLoading && allTodos) return <p>isLoading</p>;
+  if (isLoading && allTodos === null && allTodos === undefined) return <IsLoading />;
   if (isError) return <p>isError</p>;
 
   let Todos = allTodos;
   let todoListTitle = "";
 
   switch (menu) {
-    case "1":
+    case "all":
       todoListTitle = "미완료";
-      Todos = allTodos!.filter(item => item.isDone === false);
+      Todos = allTodos?.filter(item => item.isDone === false);
       break;
     case "10":
       todoListTitle = "완료";
@@ -50,10 +51,13 @@ const Todo: React.FC = () => {
     case "20":
       todoListTitle = "중요";
       Todos = allTodos!.filter(item => item.important === true && item.isDone === false);
+      break;
   }
 
+  if (!Todos) return <IsLoading />;
+
   if (tag !== "전체태그") {
-    Todos = Todos?.filter(item => item.tag.includes(tag));
+    Todos = Todos.filter(item => item.tag.includes(tag));
   }
 
   return (

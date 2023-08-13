@@ -6,28 +6,28 @@ interface ModalProps {
   name?: string | undefined;
 }
 
-const ModalWrapper = styled.div<{ name?: string }>`
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const ModalBackground = styled.div`
   position: fixed;
   left: 0;
-  right: 0;
-
-  display: flex;
-  justify-content: center;
-
-  background-color: ${({ name }) => {
-    if (name === "tagChanger") {
-      return "transparent";
-    } else {
-      return "rgba(0, 0, 0, 0.5)";
-    }
-  }};
-
-  text-align: center;
-
-  z-index: 5;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
 `;
 
 const BaseModal: React.FC<ModalProps> = ({ children, ...props }) => {
-  return <ModalWrapper {...props}>{children}</ModalWrapper>;
+  return (
+    <>
+      <ModalBackground />
+      <ModalWrapper {...props}>{children}</ModalWrapper>
+    </>
+  );
 };
 export default BaseModal;

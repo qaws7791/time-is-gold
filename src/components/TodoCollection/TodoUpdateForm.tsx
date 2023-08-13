@@ -1,12 +1,11 @@
-import { DatePicker, Input, Space } from "antd";
+import { Button, DatePicker, Form, Input, Space } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { useTodo } from "hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { ITodo, ITodoForUpdate } from "supabase/database.types";
+import { ITodo } from "supabase/database.types";
 import SelectTags from "./SelectTags";
-import { whatIsToday } from "./today";
 
 interface Props {
   item: ITodo;
@@ -15,92 +14,126 @@ interface Props {
 }
 
 const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
-  const [title, setTitle] = useState<string>(item.title);
-  const [content, setContent] = useState<string>(item.content);
-  const [deadline, setDeadline] = useState<string | undefined>(item.deadLineDate);
+  const { id, email, isDone, important, title, content, deadLineDate } = item;
   const [tag, setTag] = useState<string[]>([]);
+  const initialValue = { email, isDone, important, title, content, tag, deadLineDate };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (e.target.name === "title") {
-      setTitle(e.target.value);
-    } else if (e.target.name === "content") {
-      setContent(e.target.value);
-    }
-  };
-
-  const onDayChange = (e: dayjs.Dayjs | null) => {
-    const checkDate = e?.format().split("T")[0];
-    setDeadline(checkDate);
-  };
-
+  const [inputValue, setInputValue] = useState(initialValue);
   const { todoUpdateMutation, todoDeleteMutation } = useTodo();
 
-  // TODO email : auth 연결
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const updatedTodo: ITodoForUpdate = {
-      email: "jieun2563@naver.com",
-      title,
-      content,
-      isDone: item.isDone,
-      tag,
-      deadLineDate: deadline,
-      important: item.important
-    };
-    todoUpdateMutation.mutate({ id: item.id, updatedTodo });
-    setTitle("");
-    setContent("");
-    setDeadline(whatIsToday());
+  const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
+
+  const onDayChange = (event: dayjs.Dayjs | null) => {
+    if (event) {
+      const deadLineDate = event.format().split("T")[0];
+      setInputValue({ ...inputValue, deadLineDate });
+    }
+  };
+
+  useEffect(() => {
+    setInputValue({ ...inputValue, tag: tag });
+  }, [tag, setTag]);
+
+  const onSubmitHandler = () => {
+    todoUpdateMutation.mutate({ id, inputValue });
+    setInputValue({ ...initialValue, deadLineDate });
     onConfirm();
   };
+
   const onClickDeleteHandler = () => {
-    if (!window.confirm("삭제할거임?")) {
-      return false;
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      todoDeleteMutation.mutate(id);
+      onClose();
     }
-    todoDeleteMutation.mutate(item.id);
-    onClose();
   };
-  const onClickCloseModalHandler = () => {
-    onClose();
-  };
+
+  const register = (name: string, value: string, maxLength: number) => ({
+    name,
+    value,
+    onChange,
+    maxLength,
+    showCount: true
+  });
+
   return (
     <StFormBackground>
-      <form onSubmit={e => onSubmitHandler(e)}>
-        <Input
+      <Form
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 18 }}
+        style={{ width: 400, paddingLeft: "18px" }}
+        size="middle"
+        onFinish={onSubmitHandler}
+      >
+        <Form.Item
+          label="제목"
           name="title"
-          showCount
-          maxLength={20}
-          value={title}
-          onChange={onChange}
-          placeholder="제목을 입력하세요"
-        />
-        <TextArea
-          name="content"
-          showCount
-          maxLength={35}
-          style={{ height: 50, resize: "none" }}
-          value={content}
-          onChange={onChange}
-          placeholder="내용을 입력하세요"
-        />
-        <Space direction="vertical" size={12}>
-          <DatePicker
-            name="deadline"
-            bordered={false}
-            defaultValue={dayjs(deadline)}
-            onChange={e => onDayChange(e)}
+          initialValue={inputValue.title}
+          rules={[{ required: true, message: "제목을 입력해주세요!" }]}
+        >
+          <Input
+            {...register("title", inputValue.title, 20)}
+            defaultValue={inputValue.title}
+            placeholder="제목을 입력하세요"
           />
-        </Space>
+        </Form.Item>
+        <Form.Item
+          label="내용"
+          name="content"
+          initialValue={inputValue.content}
+          rules={[{ required: true, message: "내용을 입력해주세요!" }]}
+        >
+          <TextArea
+            {...register("content", inputValue.content, 20)}
+            defaultValue={inputValue.content}
+            style={{ height: 50, resize: "none" }}
+            placeholder="내용을 입력하세요"
+          />
+        </Form.Item>
+        <Form.Item
+          wrapperCol={{ span: 15, offset: 3 }}
+          name="range-picker"
+          label="일정"
+          initialValue={dayjs(inputValue.deadLineDate)}
+          rules={[{ required: true, message: "내용을 입력해주세요!" }]}
+        >
+          <Space direction="vertical" size={12}>
+            <DatePicker
+              name="deadline"
+              bordered={false}
+              value={dayjs(inputValue.deadLineDate)}
+              defaultValue={dayjs(inputValue.deadLineDate)}
+              onChange={event => onDayChange(event)}
+            />
+          </Space>
+        </Form.Item>
 
-        <SelectTags setTag={setTag} item={item} />
-        <button type="submit">저장</button>
-        <button type="button" onClick={onClickDeleteHandler}>
-          삭제
-        </button>
-        <button type="button" onClick={onClickCloseModalHandler}>
-          닫기
-        </button>
-      </form>
+        <Form.Item label="태그">
+          <SelectTags setTag={setTag} item={item} />
+        </Form.Item>
+        <Form.Item
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginRight: "18px",
+            marginBottom: "0"
+          }}
+        >
+          <Space size={"middle"}>
+            <Button type="primary" danger onClick={onClickDeleteHandler}>
+              삭제
+            </Button>
+            <Button type="default" onClick={onClose}>
+              닫기
+            </Button>
+            <Button type="primary" htmlType="submit">
+              저장
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
     </StFormBackground>
   );
 };
@@ -108,11 +141,15 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
 export default TodoUpdateForm;
 
 const StFormBackground = styled.div`
-  margin-top: 50px;
-  width: 600px;
-  height: 600px;
-  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 20px;
+
+  height: 370px;
+
+  margin-top: 50px;
+
+  background-color: #fff;
+  border-radius: 20px;
 `;
