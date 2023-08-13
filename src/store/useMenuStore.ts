@@ -1,23 +1,28 @@
+import dayjs from "dayjs";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 interface Store {
   page: string;
-  changePage: (page: string) => void;
   menu: string;
-  changeMenu: (menu: string) => void;
+  date: string;
   tag: string;
+  changeMenu: (menu: string) => void;
   changeTag: (tag: string) => void;
+  changePage: (page: string) => void;
+  changeDate: (date: string) => void;
 }
 
 const useMenuStore = create<Store>()(
   devtools(set => ({
     page: "calendar",
-    changePage: page => set({ page, menu: "1" }),
-    menu: "1",
-    changeMenu: menu => set({ menu }),
+    changePage: page => set({ page, menu: "all", date: dayjs().format("YYYY-MM-DD") }),
     tag: "전체태그",
-    changeTag: tag => set({ tag })
+    changeTag: tag => set({ tag }),
+    menu: "all",
+    changeMenu: menu => set({ menu }),
+    date: "",
+    changeDate: date => set({ date })
   }))
 );
 export default useMenuStore;

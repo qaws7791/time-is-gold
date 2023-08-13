@@ -1,8 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import supabase from "supabase/index";
-import Login from "pages/Login/Login";
-import Calendar from "pages/Calendar/Calendar";
 import { Outlet } from "react-router-dom";
 
 const Home = () => {
@@ -16,7 +14,6 @@ const Home = () => {
           console.log(value.data.user);
           setUser(value.data.user);
           if (!user) navigate("/login");
-          // user !== null ? navigate("/calendar") : navigate("/login");
         }
       });
     }
