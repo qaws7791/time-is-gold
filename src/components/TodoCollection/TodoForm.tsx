@@ -18,7 +18,6 @@ interface Props {
 
 const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
   const now = dayjs();
-  console.log("💟", now.format());
   const queryClient = useQueryClient();
 
   // const initialValue = {
@@ -143,8 +142,8 @@ const StFormBackground = styled.div`
   align-items: center;
   gap: 20px;
 
-  width: 600px;
-  height: 600px;
+  /* width: 600px; */
+  height: 400px;
 
   margin-top: 50px;
 

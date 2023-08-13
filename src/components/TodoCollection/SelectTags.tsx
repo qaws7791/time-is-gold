@@ -1,18 +1,21 @@
-import React, { useState } from "react";
-import { Select } from "antd";
-import type { SelectProps } from "antd";
+import React, { useEffect, useState } from "react";
+import { Select, Tag } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { getTags } from "api/tags";
 import { ITodo } from "supabase/database.types";
-import { FaCircle } from "react-icons/fa";
+import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
   item?: ITodo;
 }
-interface TagItemType {
-  tagName: string;
-  tagNumber: string;
+
+interface Option {
+  disabled: boolean | undefined;
+  key: string;
+  label: string;
+  title: string | undefined;
+  value: string;
 }
 
 const SelectTags: React.FC<Props> = ({ setTag, item }) => {
@@ -22,60 +25,97 @@ const SelectTags: React.FC<Props> = ({ setTag, item }) => {
     isError
   } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
 
-  const [selectedItems, setSelectedItems] = useState<string[]>(item?.tag || []);
+  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
+  // console.log("selectedItems :", selectedItems);
 
+  useEffect(() => {
+    if (item) {
+      const initialSelectedItems = item.tag((element: string) => {
+        let value = "";
+        if (element === "edu") value = "magenta";
+        else if (element === "work") value = "volcano";
+        else if (element === "exercise") value = "green";
+        else if (element === "chore") value = "blue";
+        else if (element === "entertain") value = "purple";
+        const newElement = {
+          disabled: undefined,
+          key: element,
+          label: element,
+          title: undefined,
+          value
+        };
+        return newElement;
+      });
+      setSelectedItems(initialSelectedItems);
+    }
+  }, []);
   if (isLoading) return <div>로딩중</div>;
-  const OPTIONS: TagItemType[] = allTags;
 
-  const onChangeSelectItems = (e: string[]) => {
+  const onChangeSelectItems = (e: Array<Option>) => {
+    const tagForDB = e.map(element => element.label);
+    console.log("!!!!!!!!!!!!!", e);
     setSelectedItems(e);
     setTag(e);
   };
 
-  let filteredOptions: string[] | undefined = [];
-  if (selectedItems.length >= 3) {
-    filteredOptions = [];
-  } else {
-    filteredOptions = OPTIONS.filter((o: TagItemType) => {
-      let compareItem: string = o.tagNumber;
-      return !selectedItems.includes(compareItem);
-    }).map(o => {
-      return o.tagNumber;
-    });
-  }
+  const notSelectedItems = allTags.filter((o: string) => {
+    // 이것 때문인가.... 첨부터 쓸까.. 바꾸는거 너무 헷갈려... 아니야 난 할 수 있또ㅘ1!!!!!!!!
+    // 식곤증...
+
+    return !selectedItems.includes(o);
+  });
+
+  const filteredOptions = selectedItems.length >= 3 ? [] : notSelectedItems;
+
+  // let filteredOptions: string[] | undefined = [];
+  // if (selectedItems.length >= 3) {
+  //   filteredOptions = [];
+  // } else {
+  //   filteredOptions = OPTIONS.filter((o: TagItemType) => {
+  //     return !selectedItems.includes(o.tagName);
+  //   }).map(o => {
+  //     return o.tagNumber;
+  //   });
+  // }
 
   // const labelJSX = `${<div><FaCircle/><span></span></div>}`
+  // console.log("?????????", filteredOptions);
+  const options = filteredOptions.map((item: string) => {
+    // console.log("다시해보자 정신차리아!!!", item);
+    let tagColor = "";
+    if (item === "edu") tagColor = "magenta";
+    else if (item === "work") tagColor = "volcano";
+    else if (item === "exercise") tagColor = "green";
+    else if (item === "chore") tagColor = "blue";
+    else if (item === "entertain") tagColor = "purple";
+    // const targetTagfromDB = allTags.find(() => tagObject.tagNumber === item);
+    return {
+      value: tagColor,
+      // value: <Tag color={tagColor}>{targetTagfromDB.tagName}</Tag>,
+      label: item
+      // (
+      // <>
+      //   <FaCircle style={{ fill: tagColor }} />
+      //   <span>{targetTagfromDB.tagName}</span>
+      // </>
+      //   <Tag key={item} color={tagColor}>
+      //     {item}
+      //   </Tag>
+      // )
+    };
+  });
 
   return (
     <Select
       mode="multiple"
+      tagRender={tagRender}
       placeholder="태그를 추가해보세요"
       value={selectedItems}
+      labelInValue
       // onChange={setSelectedItems}
       onChange={onChangeSelectItems}
       style={{ width: "100%" }}
-      options={filteredOptions.map((item: string) => {
-        let tagColor = "";
-        if (item === "1") tagColor = "#FFD1DF";
-        else if (item === "2") tagColor = "#FFE0B2";
-        else if (item === "3") tagColor = "#D0F0C0";
-        else if (item === "4") tagColor = "#B3E0FF";
-        else if (item === "5") tagColor = "#E6CCE6";
-        const targetTagfromDB = allTags.find(
-          (tagObject: TagItemType) => tagObject.tagNumber === item
-        );
-        return {
-          value: item,
-          // value: "이거를 보여주나봐",
-          // value: "이거를 보여주나봐",
-          label: (
-            <>
-              <FaCircle style={{ fill: tagColor }} />
-              <span>{targetTagfromDB.tagName}</span>
-            </>
-          )
-        };
-      })}
+      options={options}
     />
   );
   // const {
@@ -122,6 +162,25 @@ const SelectTags: React.FC<Props> = ({ setTag, item }) => {
   //     allowClear={true}
   //   />
   // );
+};
+// TODO 컴포넌트 분리하기
+const tagRender = (props: CustomTagProps) => {
+  const { label, value, closable, onClose } = props;
+  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  return (
+    <Tag
+      color={value}
+      onMouseDown={onPreventMouseDown}
+      closable={closable}
+      onClose={onClose}
+      style={{ marginRight: 3 }}
+    >
+      {label}
+    </Tag>
+  );
 };
 
 export default SelectTags;

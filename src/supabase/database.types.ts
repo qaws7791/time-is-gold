@@ -28,6 +28,7 @@ export interface ISchedulesUpdate {
 // export interface ITag {
 //   [key: string]: boolean;
 // }
+
 export interface Database {
   public: {
     Tables: {
@@ -39,7 +40,7 @@ export interface Database {
           title: string;
           content: string;
           isDone: boolean;
-          tag: string[];
+          tag: string[] | undefined;
           deadLineDate: string | undefined;
           important: boolean;
         };

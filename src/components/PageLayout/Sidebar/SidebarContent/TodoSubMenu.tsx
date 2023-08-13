@@ -22,10 +22,6 @@ import useOverlay from "hooks/useOverlay";
 import { FaCircle } from "react-icons/fa";
 
 type MenuItem = Required<MenuProps>["items"][number];
-interface TagItemType {
-  tagName: string;
-  tagNumber: string;
-}
 
 const TodoSubMenu = () => {
   const overlay = useOverlay();
@@ -41,15 +37,26 @@ const TodoSubMenu = () => {
 
   if (isLoading) return <div>로딩중</div>;
 
-  const tagItemsArr = allTags.map((tagItem: TagItemType, index: string) => {
+  const tagItemsArr = allTags.map((tagItem: string, index: string) => {
     // return getItem(tagItem, String(index + 41));
     let color = "";
-    if (tagItem.tagNumber === "1") color = "#FFD1DF";
-    else if (tagItem.tagNumber === "2") color = "#FFE0B2";
-    else if (tagItem.tagNumber === "3") color = "#D0F0C0";
-    else if (tagItem.tagNumber === "4") color = "#B3E0FF";
-    else if (tagItem.tagNumber === "5") color = "#E6CCE6";
-    return getItem(tagItem.tagName, tagItem.tagNumber, <FaCircle style={{ fill: color }} />);
+    // TODO 색상 정하기
+    //magenta 색상 color: #c41d7f; background : #fff0f6; border-color : #ffadd2;
+    //volcano 색상 color: #d4380d; background: #fff2e8; border-color: #ffbb96;
+    //green 색상 color: #389e0d; background: #f6ffed; border-color: #b7eb8f;
+    //blue 색상 color: #0958d9; background: #e6f4ff; border-color: #91caff;
+    //purple 색상 color: #531dab; background: #f9f0ff; border-color: #d3adf7;
+    if (tagItem === "edu") color = "#fff0f6";
+    else if (tagItem === "work") color = "#fff2e8";
+    else if (tagItem === "exercise") color = "#f6ffed";
+    else if (tagItem === "chore") color = "#e6f4ff";
+    else if (tagItem === "entertain") color = "#f9f0ff";
+    // if (tagItem === "edu") color = "#c41d7f";
+    // else if (tagItem === "work") color = "#d4380d";
+    // else if (tagItem === "exercise") color = "#389e0d";
+    // else if (tagItem === "chore") color = "#0958d9";
+    // else if (tagItem === "entertain") color = "#531dab";
+    return getItem(tagItem, tagItem, <FaCircle style={{ fill: color }} />);
   });
   // tagItemsArr.unshift(getItem("전체태그", "40"));
   // getItem 두번째 파라미터가 zustand 상태관리로 보내지는거, 첫 파라미터가 눈에 보이는 이름

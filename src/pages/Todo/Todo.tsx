@@ -80,7 +80,7 @@ const Todo: React.FC = () => {
         <FaPlus className="todoPlus_button" onClick={onClickStartForm} />
       </StTodosHeader>
       <StWrapperTodos>
-        {Todos?.sort((a, b) => a.id - b.id).map(item => {
+        {Todos?.sort((a, b) => b.id - a.id).map(item => {
           return <TodoItem key={item.id} item={item} />;
         })}
       </StWrapperTodos>
@@ -119,5 +119,7 @@ const StTodosHeader = styled.div`
   gap: 20px;
   & p {
     font-size: 30px;
+    /* width: 300px; */
+    /* text-align: center; */
   }
 `;

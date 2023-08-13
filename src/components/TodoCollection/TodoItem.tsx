@@ -6,24 +6,17 @@ import { styled } from "styled-components";
 import "../../icon.css";
 import useOverlay from "hooks/useOverlay";
 import TodoUpdateModal from "./TodoUpdateModal";
-import { AiOutlineCheck } from "react-icons/ai";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
-import { FaCircle, FaCheck } from "react-icons/fa";
 import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
 import { getTags } from "api/tags";
-import { Tag, Space } from "antd";
+import { Tag } from "antd";
 
 type Props = {
   item: ITodo;
 };
-interface TagItemType {
-  tagName: string;
-  tagNumber: string;
-}
 
 export type isDoneType = { isDone: boolean };
 const TodoItem = ({ item }: Props) => {
-  console.log("item :", item);
   const overlay = useOverlay();
   const {
     data: allTags,
@@ -109,23 +102,20 @@ const TodoItem = ({ item }: Props) => {
         <StTagBox>
           {item.tag?.map(tagPiece => {
             let tagColor = "";
-            if (tagPiece === "1") tagColor = "magenta";
-            else if (tagPiece === "2") tagColor = "volcano";
-            else if (tagPiece === "3") tagColor = "green";
-            else if (tagPiece === "4") tagColor = "blue";
-            else if (tagPiece === "5") tagColor = "purple";
+            if (tagPiece === "edu") tagColor = "magenta";
+            else if (tagPiece === "work") tagColor = "volcano";
+            else if (tagPiece === "exercise") tagColor = "green";
+            else if (tagPiece === "chore") tagColor = "blue";
+            else if (tagPiece === "entertain") tagColor = "purple";
             // if (tagPiece === "1") tagColor = "#FFD1DF";
             // else if (tagPiece === "2") tagColor = "#FFE0B2";
             // else if (tagPiece === "3") tagColor = "#D0F0C0";
             // else if (tagPiece === "4") tagColor = "#B3E0FF";
             // else if (tagPiece === "5") tagColor = "#E6CCE6";
-            const targetTagfromDB = allTags?.find(
-              (tagObject: TagItemType) => tagObject.tagNumber === tagPiece
-            );
             return (
               <Tag key={tagPiece} color={tagColor}>
                 {/* <FaCircle style={{ fill: tagColor }} /> */}
-                {targetTagfromDB.tagName}
+                {tagPiece}
               </Tag>
             );
           })}
