@@ -10,19 +10,6 @@ const Login = () => {
     { key: "item-2", tab: "회원가입", content: <SignUpForm /> }
   ];
 
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   async function getUserData() {
-  //     const { data, error } = await supabase.auth.getUser();
-  //     if (data.user) {
-  //       console.log("data :", data);
-  //       data.user !== null ? navigate("/") : navigate("/login");
-  //     }
-  //     if (error) console.log("error :", error);
-  //   }
-  //   getUserData();
-  // }, []);
-
   return (
     <St.Grid>
       <div>

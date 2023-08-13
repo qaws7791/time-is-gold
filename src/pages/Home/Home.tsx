@@ -17,11 +17,8 @@ const Home = () => {
       await supabase.auth.onAuthStateChange((event, session) => {
         if (session && session.user.email) setCurrentUser(session.user.email);
         if (event === "SIGNED_IN") {
-          console.log("사용자가 로그인되었습니다.");
-          console.log("사용자 정보:", session?.user);
         } else if (event === "SIGNED_OUT") {
           navigate("/login");
-          console.log("사용자가 로그아웃되었습니다.");
         }
       });
     };

@@ -20,32 +20,3 @@ const useOverlay = () => {
 };
 
 export default useOverlay;
-
-// example
-
-// const openPromiseAlert = () => new Promise((resolve) => {
-//   firstOverlay.open(({close})=>(
-//     <AlertModal
-//       onClose={() => {
-//         resolve(true)
-//         close()
-//       }}
-//     />
-//   ))
-// })
-
-// const openPromiseConfirm = () => new Promise((resolve) => {
-//   firstOverlay.open(({close})=>(
-//     <ConfirmModal
-//       onConfirm={() => {
-//         resolve(true)
-//         close()
-//       }}
-
-//       onClose={() => {
-//         resolve(false)
-//         close()
-//       }}
-//     />
-//   ))
-// })

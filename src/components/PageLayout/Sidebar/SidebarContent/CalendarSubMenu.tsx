@@ -13,7 +13,6 @@ function getItem(
   icon?: React.ReactNode,
   children?: MenuItem[]
 ): MenuItem {
-  console.log("key :", key);
   return { key, icon, children, label } as MenuItem;
 }
 

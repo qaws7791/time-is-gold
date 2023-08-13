@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useTodo } from "hooks";
 import { useState } from "react";
 import { styled } from "styled-components";
-import { ITodo, ITodoforUpdate } from "supabase/database.types";
+import { ITodo, ITodoForUpdate } from "supabase/database.types";
 import SelectTags from "./SelectTags";
 import { whatIsToday } from "./today";
 
@@ -30,21 +30,20 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
 
   const onDayChange = (e: dayjs.Dayjs | null) => {
     const checkDate = e?.format().split("T")[0];
-    console.log("✅", checkDate);
     setDeadline(checkDate);
   };
 
   const { todoUpdateMutation, todoDeleteMutation } = useTodo();
 
-  // TODO email : auth연결하면 수정해줘야함. + tag 기능 추가하면 수정해줘야함. (현재 임의로 지정)
+  // TODO email : auth 연결
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedTodo: ITodoforUpdate = {
+    const updatedTodo: ITodoForUpdate = {
       email: "jieun2563@naver.com",
       title,
       content,
       isDone: item.isDone,
-      tag: ["edu", "work", "private", "chore"],
+      tag,
       deadLineDate: deadline,
       important: item.important
     };
@@ -93,7 +92,7 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
           />
         </Space>
 
-        <SelectTags setTag={setTag} />
+        <SelectTags setTag={setTag} item={item} />
         <button type="submit">저장</button>
         <button type="button" onClick={onClickDeleteHandler}>
           삭제

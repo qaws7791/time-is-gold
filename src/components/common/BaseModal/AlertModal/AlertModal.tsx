@@ -1,6 +1,6 @@
-import React,{ useRef } from 'react';
-import BaseModal from '../BaseModal';
-import useClickOutside from 'hooks/useClickOutside';
+import useClickOutside from "hooks/useClickOutside";
+import React, { useRef } from "react";
+import BaseModal from "../BaseModal";
 
 interface ModalProps {
   onClose: () => void;
@@ -9,11 +9,11 @@ interface ModalProps {
 const AlertModal: React.FC<ModalProps> = ({ onClose }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  useClickOutside(ref,()=> onClose())
+  useClickOutside(ref, () => onClose());
 
   return (
     <BaseModal>
-      <div ref={ref} style={{border:'1px solid #ccc',padding:'30px'}}>
+      <div ref={ref} style={{ border: "1px solid #ccc", padding: "30px" }}>
         <p>Alert Modal</p>
         <button onClick={() => onClose()}>Confirm</button>
       </div>

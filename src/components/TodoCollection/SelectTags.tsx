@@ -1,43 +1,83 @@
-import { useQuery } from "@tanstack/react-query";
-import { Select } from "antd";
+import { Select, Tag } from "antd";
+import { allTags } from "components/PageLayout/Sidebar/tag.data";
+import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 import React, { useState } from "react";
-import { getTags } from "supabase/tags";
+import { ITodo } from "supabase/database.types";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
+  item?: ITodo;
+}
+interface Option {
+  disabled?: boolean | undefined;
+  key?: string;
+  label: JSX.Element;
+  title?: string | undefined;
+  value: string;
 }
 
-const SelectTags: React.FC<Props> = ({ setTag }) => {
-  const { data: allTags, isLoading } = useQuery(["TagsCollection"], () =>
-    getTags("jieun2563@naver.com")
-  );
+interface allTagsType {
+  [key: string]: string;
+}
 
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+const SelectTags: React.FC<Props> = ({ setTag, item }) => {
+  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
 
-  if (isLoading) return <div>로딩중</div>;
-  const OPTIONS = allTags;
-
-  const onChangeSelectItems = (e: string[]) => {
+  const onChangeSelectItems = (e: Option[]) => {
+    if (!e) return;
+    const tagArrForDB = e.map(element => String(element.label.key));
+    setTag(tagArrForDB);
     setSelectedItems(e);
-    setTag(e);
   };
 
-  const filteredOptions =
-    selectedItems.length >= 3 ? [] : OPTIONS.filter((o: string) => !selectedItems.includes(o));
+  let options = allTags.map((item: allTagsType) => {
+    return {
+      value: item.value,
+      label: (
+        <Tag key={item.label} color={item.value}>
+          {item.label}
+        </Tag>
+      )
+    };
+  });
+
+  const unSelectedOptions = options.filter(optionItem => {
+    let isHere = selectedItems.find(
+      selectedItem => selectedItem.label.key === optionItem.label.key
+    );
+    return isHere === undefined ? true : false;
+  });
+  selectedItems.length >= 3 ? (options = []) : (options = unSelectedOptions);
 
   return (
     <Select
       mode="multiple"
-      placeholder="Inserted are removed"
+      placeholder="태그를 추가해보세요"
       value={selectedItems}
+      tagRender={tagRender}
+      labelInValue
       onChange={onChangeSelectItems}
       style={{ width: "100%" }}
-      options={filteredOptions.map((item: string) => ({
-        value: item,
-        label: item
-      }))}
+      options={options}
     />
   );
+};
+
+// TODO 컴포넌트 분리하기
+const tagRender = (props: CustomTagProps) => {
+  const { label, closable, onClose } = props;
+
+  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  const labelWithFuc = React.cloneElement(label as React.ReactElement, {
+    onMouseDown: onPreventMouseDown,
+    closable,
+    onClose,
+    style: { marginRight: 3 }
+  });
+  return <>{labelWithFuc}</>;
 };
 
 export default SelectTags;

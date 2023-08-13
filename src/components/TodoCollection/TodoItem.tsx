@@ -1,7 +1,7 @@
-// TODO tag는 후순위로 미루기 (할 때 datatype등 다시 설정해줘야함)
+import { Tag } from "antd";
 import { useTodo } from "hooks";
 import useOverlay from "hooks/useOverlay";
-import { AiOutlineCheck } from "react-icons/ai";
+import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
 import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
 import { styled } from "styled-components";
 import { ITodo } from "supabase/database.types";
@@ -20,13 +20,8 @@ const TodoItem = ({ item }: Props) => {
 
   const onClickSwitchHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     e.stopPropagation();
-    const todoIsDone: boolean = !item.isDone;
-    todoIsDoneMutation.mutate({ id: item.id, todoIsDone });
+    todoIsDoneMutation.mutate({ id: item.id, isDone: !item.isDone });
   };
-  // const onClickUpdateHandler = () => {
-  //   setIsStartForm(true);
-  // };
-  const isDoneIconCss = item.isDone ? "black isDoneCheck" : "gray isDoneCheck";
 
   const openPromiseToUpdateModal = () =>
     new Promise(resolve => {
@@ -50,27 +45,48 @@ const TodoItem = ({ item }: Props) => {
     const important: boolean = !item.important;
     todoImportantMutation.mutate({ id: item.id, important });
   };
+
+  if (!item) return <p>로딩중</p>;
+
+  const showTag = item.tag?.map(tagPiece => {
+    let tagColor = "";
+    if (tagPiece === "edu") tagColor = "magenta";
+    else if (tagPiece === "work") tagColor = "volcano";
+    else if (tagPiece === "exercise") tagColor = "green";
+    else if (tagPiece === "chore") tagColor = "blue";
+    else if (tagPiece === "entertain") tagColor = "purple";
+    return (
+      <Tag key={tagPiece} color={tagColor}>
+        {tagPiece}
+      </Tag>
+    );
+  });
+
   return (
     <>
       {/* {isStartForm && <TodoUpdateForm item={item} setIsStartForm={setIsStartForm} />} */}
       <StTodoCardWrapper onClick={openPromiseToUpdateModal}>
         <StCardHeader>
-          <h3>{item.title}</h3>
-          <AiOutlineCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} />
+          <TodoTitle>{item.title}</TodoTitle>
+          {item.isDone ? (
+            <PiCheckFatFill className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+          ) : (
+            <PiCheckFatBold className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+          )}
         </StCardHeader>
         <StCardBody>
-          {item.important ? (
-            <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
-          ) : (
-            <TiStarOutline className="star" onClick={onClickCheckImportance} />
-          )}
-          <p>{item.content}</p>
-          <p>~{item.deadLineDate}</p>
-          {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}
-          {item.tag?.map(tagPiece => {
-            return <p key={tagPiece}>{tagPiece}</p>;
-          })}
+          <ContentIconBox>
+            <TodoContent>{item.content}</TodoContent>
+            {item.important ? (
+              <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
+            ) : (
+              <TiStarOutline className="star" onClick={onClickCheckImportance} />
+            )}
+          </ContentIconBox>
         </StCardBody>
+
+        <StTagBox>{showTag}</StTagBox>
+        <StTodoDeadLineDate>~{item.deadLineDate}</StTodoDeadLineDate>
       </StTodoCardWrapper>
     </>
   );
@@ -79,24 +95,81 @@ const TodoItem = ({ item }: Props) => {
 export default TodoItem;
 
 const StTodoCardWrapper = styled.div`
-  border: 1px solid black;
+  position: relative;
+
+  width: 355px;
+  height: 250px;
+
   margin: 10px;
+
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  border-color: #d6d6d6;
   cursor: pointer;
-  width: 300px;
-  height: 200px;
 `;
 
 const StCardHeader = styled.div`
-  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  height: 20%;
+
   padding: 10px 20px;
+
   border-bottom: 1px solid #eee;
+
+  box-sizing: border-box;
+  gap: 0 15px 0 0;
+`;
+
+const TodoTitle = styled.p`
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const StCardBody = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  flex: 1;
+
+  height: 60%;
+
+  padding: 0 20px;
+`;
+
+const ContentIconBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 5px;
+  gap: 10px;
+`;
+
+const TodoContent = styled.p`
+  width: 90%;
+
+  margin-top: 5px;
+
+  font-size: 15px;
+  font-weight: 550;
+  line-height: 25px;
+`;
+
+const StTodoDeadLineDate = styled.p`
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+
+  color: gray;
+  font-size: 17px;
+`;
+
+const StTagBox = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  margin-left: 30px;
 `;

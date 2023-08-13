@@ -15,15 +15,6 @@ export const Outer = styled.div`
 
   background-color: rgba(0, 0, 0, 0.5);
 `;
-/* ${(props) => {
-    switch (props.ModalType) {
-    case "":
-      
-      break;
-  
-    default:
-      break;
-  })}} */
 
 export const Inner = styled.div`
   display: flex;
@@ -34,7 +25,6 @@ export const Inner = styled.div`
 
   background-color: #ffffff;
   border-radius: 20px;
-  /* border: 2px solid black; */
 `;
 
 export const Form = styled.form`

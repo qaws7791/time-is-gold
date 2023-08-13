@@ -8,6 +8,5 @@ export const whatIsToday = () => {
   const day =
     String(date.getDate()).length === 2 ? String(date.getDate()) : "0" + String(date.getDate());
   const todayDate = year + "-" + month + "-" + day;
-  console.log(todayDate);
   return todayDate;
 };

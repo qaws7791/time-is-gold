@@ -1,24 +1,16 @@
-// TODO 할일 추가 전역으로 관리하는 모달로 띄울 예정 (일단 임시 생성)
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import TodoItem from "components/TodoCollection/TodoItem";
 import TodoModal from "components/TodoCollection/TodoModal";
 import useOverlay from "hooks/useOverlay";
+import { FaPlus } from "react-icons/fa6";
 import useMenuStore from "store/useMenuStore";
 import { styled } from "styled-components";
 import { getTodos } from "supabase/todo";
-import TodoItem from "../../components/TodoCollection/TodoItem";
 
 const Todo: React.FC = () => {
   const overlay = useOverlay();
-  const { menu } = useMenuStore();
-  // const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
-  const { data, isLoading, isError } = useInfiniteQuery({
-    queryKey: ["projects"],
-    queryFn: getTodos,
-    getNextPageParam: lastPage => {
-      console.log("lastPage", lastPage);
-    }
-  });
-  console.log("data :", data);
+  const { menu, tag } = useMenuStore();
+  const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
 
   const openPromiseToModal = () =>
     new Promise(resolve => {
@@ -36,16 +28,15 @@ const Todo: React.FC = () => {
       ));
     });
 
-  const onClickStartForm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onClickStartForm = async (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     await openPromiseToModal();
   };
 
-  if (!data) return <p>로딩중</p>;
-  const allTodos = data.pages[0];
+  if (isLoading && allTodos) return <p>isLoading</p>;
+  if (isError) return <p>isError</p>;
 
   let Todos = allTodos;
   let todoListTitle = "";
-  // let
 
   switch (menu) {
     case "1":
@@ -60,38 +51,54 @@ const Todo: React.FC = () => {
       todoListTitle = "중요";
       Todos = allTodos!.filter(item => item.important === true && item.isDone === false);
   }
-  if (isLoading) return <div>내 투두 주이소</div>;
-  if (isError) return <div>에러남</div>;
-  if (Todos) console.log(Todos);
+
+  if (tag !== "전체태그") {
+    Todos = Todos?.filter(item => item.tag.includes(tag));
+  }
+
   return (
-    <div>
-      {/* {isStartForm && <TodoModal />} */}
-      <div>
+    <StWrapper>
+      <StTodosHeader>
         <p>{todoListTitle}</p>
-        <button onClick={onClickStartForm}>+</button>
-      </div>
+        <FaPlus className="todoPlus_button" onClick={onClickStartForm} />
+      </StTodosHeader>
       <StWrapperTodos>
-        {Todos?.sort((a, b) => a.id - b.id).map(item => {
+        {Todos?.sort((a, b) => b.id - a.id).map(item => {
           return <TodoItem key={item.id} item={item} />;
         })}
       </StWrapperTodos>
-    </div>
+    </StWrapper>
   );
 };
 export default Todo;
 
-/*
-데이터를 쿼리하려면 정책이 필요합니다.
-이 테이블에서 데이터를 쿼리하려면 먼저 액세스 정책을 작성해야 합니다. 정책이 없으면 이 테이블을 쿼리하면 빈 결과 배열이 생성됩니다.
-
-이 테이블을 생성한 후 정책을 생성할 수 있습니다.
-*/
+const StWrapper = styled.div`
+  margin: 20px;
+`;
 
 const StWrapperTodos = styled.div`
-  padding: 10px;
-  width: 100%;
-  height: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-gap: 20px;
+
+  width: 100%;
+
+  padding: 10px;
+
+  place-items: center;
+`;
+
+const StTodosHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  height: 35px;
+
+  margin-bottom: 20px;
+
+  & p {
+    font-size: 30px;
+  }
 `;

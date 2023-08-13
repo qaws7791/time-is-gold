@@ -34,12 +34,7 @@ export const Calendar = () => {
   };
 
   if (isLoading) {
-    return (
-      <FullCalendar
-        {...fullCalendarOption}
-        events={[]} // 달력에 표시 될 이벤트
-      />
-    );
+    return <FullCalendar {...fullCalendarOption} events={[]} />;
   }
 
   if (isError) {

@@ -30,25 +30,23 @@ export interface ISchedulesUpdate {
 // export interface ITag {
 //   [key: string]: boolean;
 // }
+
 export interface Database {
   public: {
     Tables: {
       todos: {
         Row: {
-          // the data expected from .select()
           id: number;
           email: string;
           title: string;
           content: string;
           isDone: boolean;
-          tag: string[];
+          tag: string[] | undefined;
           deadLineDate: string | undefined;
           important: boolean;
         };
         Insert: {
-          // the data to be passed to .insert()
-          // id?: never; // generated columns must not be supplied
-          id?: never; // generated columns must not be supplied
+          id?: never;
           email: string;
           title: string;
           content: string;
@@ -58,8 +56,7 @@ export interface Database {
           important: boolean;
         };
         Update: {
-          // the data to be passed to .update()
-          id?: never; // generated columns must not be supplied
+          id?: never;
           email: string;
           title: string;
           content: string;
@@ -75,6 +72,5 @@ export interface Database {
 }
 
 export type ITodo = Database["public"]["Tables"]["todos"]["Row"];
-export type ITodoforInsert = Database["public"]["Tables"]["todos"]["Insert"];
-export type ITodoforUpdate = Database["public"]["Tables"]["todos"]["Update"];
-// export type ITodoforDelete = Database["public"]["Tables"]["todos"]["Delete"];
+export type ITodoForInsert = Database["public"]["Tables"]["todos"]["Insert"];
+export type ITodoForUpdate = Database["public"]["Tables"]["todos"]["Update"];
