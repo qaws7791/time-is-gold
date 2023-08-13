@@ -11,158 +11,63 @@ interface Props {
 }
 
 interface Option {
-  disabled: boolean | undefined;
-  key: string;
+  disabled?: boolean | undefined;
+  key?: string;
   label: string;
-  title: string | undefined;
+  title?: string | undefined;
   value: string;
 }
 
+interface allTagsType {
+  [key: string]: string;
+}
+
+// 수정 form에서 서버에 저장된 item의 tag를 불러올때.. 잘 집어넣어주려면 (집어넣어주기 편한 형태...)
 const SelectTags: React.FC<Props> = ({ setTag, item }) => {
-  const {
-    data: allTags,
-    isLoading,
-    isError
-  } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
+  const [selectedItems, setSelectedItems] = useState([]);
+  const allTags = [
+    { label: "edu", value: "magenta" },
+    { label: "work", value: "volcano" },
+    { label: "exercise", value: "green" },
+    { label: "chore", value: "blue" },
+    { label: "entertain", value: "purple" }
+  ];
 
-  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
-  // console.log("selectedItems :", selectedItems);
+  //test
+  // const selectedItems = ["select tag value 값"];
 
-  useEffect(() => {
-    if (item) {
-      const initialSelectedItems = item.tag((element: string) => {
-        let value = "";
-        if (element === "edu") value = "magenta";
-        else if (element === "work") value = "volcano";
-        else if (element === "exercise") value = "green";
-        else if (element === "chore") value = "blue";
-        else if (element === "entertain") value = "purple";
-        const newElement = {
-          disabled: undefined,
-          key: element,
-          label: element,
-          title: undefined,
-          value
-        };
-        return newElement;
-      });
-      setSelectedItems(initialSelectedItems);
-    }
-  }, []);
-  if (isLoading) return <div>로딩중</div>;
+  //test
+  const options = [{ label: "options label값", value: "options value값" }];
 
-  const onChangeSelectItems = (e: Array<Option>) => {
-    const tagForDB = e.map(element => element.label);
-    console.log("!!!!!!!!!!!!!", e);
+  const onChangeSelectItems = (e: Option[]) => {
+    console.log("클릭한 태그 보여줌 e값", e);
+    // db에 넘겨줄 때는 e배열의 각 배열요소에서 'label'만 다 담은 배열 형태를 저장해주면됨
+    const tagArrForDB = e.map(element => {
+      return element.label;
+    });
+    setTag(tagArrForDB);
+
+    // selectedItems로 'select의 value'랑 options 따로 구분해야하나.......... 일단은 label만 담아본다
     setSelectedItems(e);
-    setTag(e);
   };
-
-  const notSelectedItems = allTags.filter((o: string) => {
-    // 이것 때문인가.... 첨부터 쓸까.. 바꾸는거 너무 헷갈려... 아니야 난 할 수 있또ㅘ1!!!!!!!!
-    // 식곤증...
-
-    return !selectedItems.includes(o);
-  });
-
-  const filteredOptions = selectedItems.length >= 3 ? [] : notSelectedItems;
-
-  // let filteredOptions: string[] | undefined = [];
-  // if (selectedItems.length >= 3) {
-  //   filteredOptions = [];
-  // } else {
-  //   filteredOptions = OPTIONS.filter((o: TagItemType) => {
-  //     return !selectedItems.includes(o.tagName);
-  //   }).map(o => {
-  //     return o.tagNumber;
-  //   });
-  // }
-
-  // const labelJSX = `${<div><FaCircle/><span></span></div>}`
-  // console.log("?????????", filteredOptions);
-  const options = filteredOptions.map((item: string) => {
-    // console.log("다시해보자 정신차리아!!!", item);
-    let tagColor = "";
-    if (item === "edu") tagColor = "magenta";
-    else if (item === "work") tagColor = "volcano";
-    else if (item === "exercise") tagColor = "green";
-    else if (item === "chore") tagColor = "blue";
-    else if (item === "entertain") tagColor = "purple";
-    // const targetTagfromDB = allTags.find(() => tagObject.tagNumber === item);
-    return {
-      value: tagColor,
-      // value: <Tag color={tagColor}>{targetTagfromDB.tagName}</Tag>,
-      label: item
-      // (
-      // <>
-      //   <FaCircle style={{ fill: tagColor }} />
-      //   <span>{targetTagfromDB.tagName}</span>
-      // </>
-      //   <Tag key={item} color={tagColor}>
-      //     {item}
-      //   </Tag>
-      // )
-    };
-  });
 
   return (
     <Select
       mode="multiple"
       tagRender={tagRender}
       placeholder="태그를 추가해보세요"
-      value={selectedItems}
+      value={selectedItems} // 선택한 값 담아주는 곳 => 드롭다운 젤 위에 보여줌????
+      // value={"여기"} // for DB?
       labelInValue
       // onChange={setSelectedItems}
       onChange={onChangeSelectItems}
       style={{ width: "100%" }}
-      options={options}
+      // options={options} // only for tagRender
+      options={allTags} // only for tagRender => 드롭다운 할 거 담긴 곳?? => 여기정보 눌렀을 때 value setting 되는 듯? => 그럼 일단 selectedItems는 수정 컴포넌트 외에는 항상 초기값이 빈배열 => options 를 selected 가 change 될때마다 변경해주면 됨.
     />
   );
-  // const {
-  //   data: allTags,
-  //   isLoading,
-  //   isError
-  // } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
-  // if (isLoading) return <div>ㅠㅠ</div>;
-  // if (isError) return <div>오류있음</div>;
-  // if (allTags) {
-  //   console.log("🎊", allTags);
-  // }
-
-  // const options: SelectProps["options"] = [];
-  // // options에 넣어줄 tag들 => value의 초기값 빈값, value는 setTags로 state관리 해줘야함
-  // // options에 넣어줄 tag들 => label도
-  // for (let i = 0; i < allTags.length; i++) {
-  //   options.push({
-  //     // 이게 select 실제 db로 저장될 값 => 선택되는 거
-  //     value: allTags[i],
-  //     // value: i.toString(36) + i,
-
-  //     // 이게 select 보여지는 이름
-  //     label: allTags[i]
-  //     // label: i.toString(36) + i
-  //   });
-  // }
-
-  // const handleChange = (value: string) => {
-  //   // if (value.length > 3) return;
-  //   // if (value.length >= 3) setIsDisabled(true);
-  //   // if (value.length >= 3) console.log(`selected ${value}`);
-  //   // if (value.length < 3) setIsDisabled(false);
-  //   console.log(value);
-  // };
-
-  // return (
-  //   <Select
-  //     mode="tags"
-  //     style={{ width: "100%" }}
-  //     placeholder="Tags Mode"
-  //     onChange={handleChange}
-  //     options={options}
-  //     allowClear={true}
-  //   />
-  // );
 };
+
 // TODO 컴포넌트 분리하기
 const tagRender = (props: CustomTagProps) => {
   const { label, value, closable, onClose } = props;
