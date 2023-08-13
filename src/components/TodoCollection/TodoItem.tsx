@@ -1,15 +1,12 @@
-// TODO tag는 후순위로 미루기 (할 때 datatype등 다시 설정해줘야함)
-import { ITodo } from "supabase/database.types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { checkTodoImportance, switchTodo } from "api/todo";
-import { styled } from "styled-components";
-import "../../icon.css";
-import useOverlay from "hooks/useOverlay";
-import TodoUpdateModal from "./TodoUpdateModal";
-import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
-import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
-import { getTags } from "api/tags";
 import { Tag } from "antd";
+import { useTodo } from "hooks";
+import useOverlay from "hooks/useOverlay";
+import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
+import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
+import { styled } from "styled-components";
+import { ITodo } from "supabase/database.types";
+import "../../icon.css";
+import TodoUpdateModal from "./TodoUpdateModal";
 
 type Props = {
   item: ITodo;
@@ -18,34 +15,13 @@ type Props = {
 export type isDoneType = { isDone: boolean };
 const TodoItem = ({ item }: Props) => {
   const overlay = useOverlay();
-  const {
-    data: allTags,
-    isLoading: allTagsIsLoading,
-    isError: allTagsIsError
-  } = useQuery(["TagsCollection"], () => getTags("jieun2563@naver.com"));
 
-  const queryClient = useQueryClient();
-
-  const todoIsDoneMutation = useMutation(switchTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
-
-  const todoImportantMutation = useMutation(checkTodoImportance, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
+  const { todoIsDoneMutation, todoImportantMutation } = useTodo();
 
   const onClickSwitchHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     e.stopPropagation();
-    const todoIsDone: boolean = !item.isDone;
-    todoIsDoneMutation.mutate({ id: item.id, todoIsDone });
+    todoIsDoneMutation.mutate({ id: item.id, isDone: !item.isDone });
   };
-  // const onClickUpdateHandler = () => {
-  //   setIsStartForm(true);
-  // };
 
   const openPromiseToUpdateModal = () =>
     new Promise(resolve => {
@@ -71,7 +47,20 @@ const TodoItem = ({ item }: Props) => {
   };
 
   if (!item) return <p>로딩중</p>;
-  if (!allTags) return <p>로딩중</p>;
+
+  const showTag = item.tag?.map(tagPiece => {
+    let tagColor = "";
+    if (tagPiece === "edu") tagColor = "magenta";
+    else if (tagPiece === "work") tagColor = "volcano";
+    else if (tagPiece === "exercise") tagColor = "green";
+    else if (tagPiece === "chore") tagColor = "blue";
+    else if (tagPiece === "entertain") tagColor = "purple";
+    return (
+      <Tag key={tagPiece} color={tagColor}>
+        {tagPiece}
+      </Tag>
+    );
+  });
 
   return (
     <>
@@ -79,8 +68,6 @@ const TodoItem = ({ item }: Props) => {
       <StTodoCardWrapper onClick={openPromiseToUpdateModal}>
         <StCardHeader>
           <TodoTitle>{item.title}</TodoTitle>
-          {/* <FaCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} /> */}
-          {/* <FaCheck className={isDoneIconCss} onClick={e => onClickSwitchHandler(e)} /> */}
           {item.isDone ? (
             <PiCheckFatFill className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
           ) : (
@@ -98,28 +85,7 @@ const TodoItem = ({ item }: Props) => {
           </ContentIconBox>
         </StCardBody>
 
-        {/* <button>{item.isDone ? "미완료" : "완료"}</button> */}
-        <StTagBox>
-          {item.tag?.map(tagPiece => {
-            let tagColor = "";
-            if (tagPiece === "edu") tagColor = "magenta";
-            else if (tagPiece === "work") tagColor = "volcano";
-            else if (tagPiece === "exercise") tagColor = "green";
-            else if (tagPiece === "chore") tagColor = "blue";
-            else if (tagPiece === "entertain") tagColor = "purple";
-            // if (tagPiece === "1") tagColor = "#FFD1DF";
-            // else if (tagPiece === "2") tagColor = "#FFE0B2";
-            // else if (tagPiece === "3") tagColor = "#D0F0C0";
-            // else if (tagPiece === "4") tagColor = "#B3E0FF";
-            // else if (tagPiece === "5") tagColor = "#E6CCE6";
-            return (
-              <Tag key={tagPiece} color={tagColor}>
-                {/* <FaCircle style={{ fill: tagColor }} /> */}
-                {tagPiece}
-              </Tag>
-            );
-          })}
-        </StTagBox>
+        <StTagBox>{showTag}</StTagBox>
         <StTodoDeadLineDate>~{item.deadLineDate}</StTodoDeadLineDate>
       </StTodoCardWrapper>
     </>

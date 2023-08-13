@@ -1,6 +1,6 @@
 import { BaseModal } from "components/common";
-import TodoUpdateForm from "./TodoUpdateForm";
 import { ITodo } from "supabase/database.types";
+import TodoUpdateForm from "./TodoUpdateForm";
 
 interface Props {
   item: ITodo;

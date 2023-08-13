@@ -1,33 +1,26 @@
 import { AppstoreOutlined, StarOutlined, TagsOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import type { MenuProps } from "antd/es/menu";
-import useMenuStore from "store/useMenuStore";
-import { PiCheckFatBold } from "react-icons/pi";
-import { PiCheckFatFill } from "react-icons/pi";
-import { styled } from "styled-components";
-import { useQuery } from "@tanstack/react-query";
-import { getTags } from "api/tags";
 import { FaCircle } from "react-icons/fa";
+import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
+import useMenuStore from "store/useMenuStore";
+import { styled } from "styled-components";
+import { allTags } from "../tag.data";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const TodoSubMenu = () => {
-  const { data: allTags, isLoading } = useQuery(["TagsCollection"], () =>
-    getTags("jieun2563@naver.com")
-  );
-
   const { tag, menu, changeMenu, changeTag } = useMenuStore();
 
-  if (isLoading) return <div>로딩중</div>;
-
-  const tagItemsArr = allTags.map((tagItem: string, index: string) => {
+  const tagItemsArr = allTags.map((tagItem, index) => {
+    const { label } = tagItem;
     let color = "";
-    if (tagItem === "edu") color = "#ffadd2";
-    else if (tagItem === "work") color = "#ffbb96";
-    else if (tagItem === "exercise") color = "#b7eb8f";
-    else if (tagItem === "chore") color = "#91caff";
-    else if (tagItem === "entertain") color = "#d3adf7";
-    return getItem(tagItem, tagItem, <FaCircle style={{ fill: color }} />);
+    if (label === "edu") color = "#ffadd2";
+    else if (label === "work") color = "#ffbb96";
+    else if (label === "exercise") color = "#b7eb8f";
+    else if (label === "chore") color = "#91caff";
+    else if (label === "entertain") color = "#d3adf7";
+    return getItem(label, label, <FaCircle style={{ fill: color }} />);
   });
 
   tagItemsArr.unshift(getItem("전체태그", "전체태그", <AppstoreOutlined />));
@@ -56,7 +49,6 @@ const TodoSubMenu = () => {
     } as MenuItem;
   }
 
-  // 선택된 거
   let selectedKeyforState = "1";
   let selectedKeyfortag = "전체태그";
   if (menu) {

@@ -1,10 +1,12 @@
+export type TBackgroundColor = "#FFD1DF" | "#FFE0B2" | "#D0F0C0" | "#B3E0FF" | "#E6CCE6";
+
 export interface ISchedulesRow {
-  id: number;
+  id: string;
   email: string;
   title: string;
   start: string;
   end: string;
-  backgroundColor: string;
+  backgroundColor: TBackgroundColor;
 }
 
 export interface ISchedulesInsert {
@@ -12,7 +14,7 @@ export interface ISchedulesInsert {
   title: string;
   start: string;
   end: string;
-  backgroundColor: number;
+  backgroundColor: TBackgroundColor;
 }
 
 export interface ISchedulesUpdate {
@@ -20,7 +22,7 @@ export interface ISchedulesUpdate {
   title?: string;
   start?: string;
   end?: string;
-  backgroundColor?: number;
+  backgroundColor?: string;
 }
 
 // TODO tag는 없어도 되는 친구 같은데.. 그럼 type을 어떻게 해야하나 빈배열도.. undefined? 해주나? 지금은 key value 객체로 넣고 있고 있긴한데 나중에 넣게되면 배열 형태로 넣을거임
@@ -34,7 +36,6 @@ export interface Database {
     Tables: {
       todos: {
         Row: {
-          // the data expected from .select()
           id: number;
           email: string;
           title: string;
@@ -45,9 +46,7 @@ export interface Database {
           important: boolean;
         };
         Insert: {
-          // the data to be passed to .insert()
-          // id?: never; // generated columns must not be supplied
-          id?: never; // generated columns must not be supplied
+          id?: never;
           email: string;
           title: string;
           content: string;
@@ -57,8 +56,7 @@ export interface Database {
           important: boolean;
         };
         Update: {
-          // the data to be passed to .update()
-          id?: never; // generated columns must not be supplied
+          id?: never;
           email: string;
           title: string;
           content: string;
@@ -74,6 +72,5 @@ export interface Database {
 }
 
 export type ITodo = Database["public"]["Tables"]["todos"]["Row"];
-export type ITodoforInsert = Database["public"]["Tables"]["todos"]["Insert"];
-export type ITodoforUpdate = Database["public"]["Tables"]["todos"]["Update"];
-// export type ITodoforDelete = Database["public"]["Tables"]["todos"]["Delete"];
+export type ITodoForInsert = Database["public"]["Tables"]["todos"]["Insert"];
+export type ITodoForUpdate = Database["public"]["Tables"]["todos"]["Update"];

@@ -1,35 +1,27 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Space } from "antd";
-import google from "assets/google.png";
-import LoginStore from "store/LoginStore";
-import * as St from "style/loginStyled";
+import { Button, Form, Input } from "antd";
+import * as St from "components/Login/LoginForm.style";
+import { useState } from "react";
+import { signUp } from "supabase/auth";
+import { GoogleLoginButton } from "./GoogleLoginButton";
+
 const SignUpForm = () => {
-  const {
-    email,
-    password,
-    passwordCheck,
-    EmailChangeHandler,
-    PasswordChangeHandler,
-    PasswordCheckChangeHandler,
-    signupHandler,
-    googleLoginHandler
-  } = LoginStore();
-  const [form] = Form.useForm();
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const initialValue = { email: "", password: "", passwordCheck: "" };
+  const [inputValue, setInputValue] = useState(initialValue);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setInputValue({ ...inputValue, [name]: value });
   };
-  const resetField = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    form.setFieldsValue({
-      email: "",
-      password: "",
-      passwordCheck: ""
-    });
+
+  const onFinish = () => {
+    signUp(inputValue);
+    setInputValue(initialValue);
   };
 
   return (
     <div>
       <Form
-        form={form}
         name="normal_login"
         className="login-form"
         initialValues={{ remember: true }}
@@ -39,11 +31,11 @@ const SignUpForm = () => {
           <Input
             status="warning"
             prefix={<MailOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
-            type="text"
+            type="email"
             placeholder="E-mail"
-            value={email}
             name="email"
-            onChange={EmailChangeHandler}
+            value={inputValue.email}
+            onChange={onChange}
           />
         </Form.Item>
         <Form.Item
@@ -55,9 +47,9 @@ const SignUpForm = () => {
             prefix={<LockOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="password"
             placeholder="password"
-            value={password}
             name="password"
-            onChange={PasswordChangeHandler}
+            value={inputValue.password}
+            onChange={onChange}
           />
         </Form.Item>
         <Form.Item
@@ -69,32 +61,15 @@ const SignUpForm = () => {
             prefix={<LockOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="password"
             placeholder="Password"
-            value={passwordCheck}
+            value={inputValue.passwordCheck}
             name="passwordCheck"
-            onChange={PasswordCheckChangeHandler}
+            onChange={onChange}
           />
         </Form.Item>
         <St.Flex>
           <Form.Item>
-            <Button
-              htmlType="submit"
-              className="signUp-form-button"
-              onClick={e => {
-                signupHandler(e);
-                resetField(e);
-              }}
-            >
-              회원가입
-            </Button>
-            <Space direction="vertical">
-              <Space wrap>
-                <Button type="link" onClick={googleLoginHandler}>
-                  <St.GoogleSignImgFlex>
-                    <St.GoogleImg src={google} alt="구글로고" /> 구글과 회원가입
-                  </St.GoogleSignImgFlex>
-                </Button>
-              </Space>
-            </Space>
+            <Button htmlType="submit">회원가입</Button>
+            <GoogleLoginButton />
           </Form.Item>
         </St.Flex>
       </Form>

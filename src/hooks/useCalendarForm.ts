@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { TColor } from "./Calendar.type";
+import type { TBackgroundColor } from "supabase/database.types";
 
-const useInputForm = <T,>(initialValue: T) => {
+export const useCalendarForm = <T>(initialValue: T) => {
   const [inputValue, setInputValue] = useState(initialValue);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +16,7 @@ const useInputForm = <T,>(initialValue: T) => {
     onChange
   });
 
-  const colorRegister = (color: TColor) => ({
+  const colorRegister = (color: TBackgroundColor) => ({
     color,
     onChange,
     value: color,
@@ -26,5 +26,3 @@ const useInputForm = <T,>(initialValue: T) => {
 
   return { inputValue, setInputValue, register, colorRegister };
 };
-
-export default useInputForm;

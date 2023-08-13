@@ -1,13 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DatePicker, Input, Space } from "antd";
-import { useState } from "react";
-import dayjs from "dayjs";
-import { ITodo, ITodoforUpdate } from "supabase/database.types";
-import { whatIsToday } from "./today";
-import { deleteTodo, updateTodo } from "api/todo";
 import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
+import { useTodo } from "hooks";
+import { useState } from "react";
 import { styled } from "styled-components";
+import { ITodo, ITodoForUpdate } from "supabase/database.types";
 import SelectTags from "./SelectTags";
+import { whatIsToday } from "./today";
 
 interface Props {
   item: ITodo;
@@ -16,7 +15,6 @@ interface Props {
 }
 
 const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
-  const queryClient = useQueryClient();
   const [title, setTitle] = useState<string>(item.title);
   const [content, setContent] = useState<string>(item.content);
   const [deadline, setDeadline] = useState<string | undefined>(item.deadLineDate);
@@ -32,26 +30,15 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
 
   const onDayChange = (e: dayjs.Dayjs | null) => {
     const checkDate = e?.format().split("T")[0];
-    console.log("✅", checkDate);
     setDeadline(checkDate);
   };
 
-  const todoUpdateMutation = useMutation(updateTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
+  const { todoUpdateMutation, todoDeleteMutation } = useTodo();
 
-  const todoDeleteMutation = useMutation(deleteTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
-
-  // TODO email : auth연결하면 수정해줘야함. + tag 기능 추가하면 수정해줘야함. (현재 임의로 지정)
+  // TODO email : auth 연결
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedTodo: ITodoforUpdate = {
+    const updatedTodo: ITodoForUpdate = {
       email: "jieun2563@naver.com",
       title,
       content,

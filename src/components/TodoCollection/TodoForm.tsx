@@ -1,13 +1,11 @@
-import { Input, DatePicker, Space, Form, Button } from "antd";
-import { useState } from "react";
+import { Button, DatePicker, Form, Input, Space } from "antd";
 import dayjs from "dayjs";
-import { whatIsToday } from "./today";
-import { postTodo } from "api/todo";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ITodoforInsert } from "supabase/database.types";
+import { useTodo } from "hooks";
+import { useState } from "react";
 import { styled } from "styled-components";
+import { ITodoForInsert } from "supabase/database.types";
 import SelectTags from "./SelectTags";
-import { getTags } from "api/tags";
+import { whatIsToday } from "./today";
 
 const { TextArea } = Input;
 
@@ -17,52 +15,30 @@ interface Props {
 }
 
 const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
-  const now = dayjs();
-  const queryClient = useQueryClient();
-
-  // const initialValue = {
-  //   title: "",
-  //   content: "",
-  //   deadLineDate: whatIsToday(),
-  //   isDone: false,
-  //   important: false
-  // };
-  // const [inputValue, setInputValue] = useState(initialValue);
-
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [deadLineDate, setDeadLineDate] = useState<string | undefined>(whatIsToday());
   const [tag, setTag] = useState<string[]>([]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // const {name, value} = e.target}
     if (e.target.name === "title") {
       setTitle(e.target.value);
     } else if (e.target.name === "content") {
       setContent(e.target.value);
     }
-    // setInputValue({...inputValue, [e.target.name]:e.target.value})
   };
 
   const onDayChange = (e: dayjs.Dayjs | null) => {
     const checkDate = e?.format().split("T")[0];
     setDeadLineDate(checkDate);
   };
+  const { todoPostMutation } = useTodo();
 
-  const todoPostMutation = useMutation(postTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
-
-  // TODO email : auth연결하면 수정해줘야함. + tag 기능 추가하면 수정해줘야함. (현재 임의로 지정)
   const onSubmitHandler = () => {
-    if (!title || !content || !deadLineDate) {
-      alert("제목, 내용, 마감기한 설정은 필수입니다");
-      return false;
-    }
-    const newTodo: ITodoforInsert = {
-      email: "jieun2563@naver.com", // FIXME 현재 유저 정보 가져오기
+    if (!title || !content || !deadLineDate) return alert("제목, 내용, 마감기한 설정은 필수입니다");
+
+    const newTodo: ITodoForInsert = {
+      email: "jieun2563@naver.com",
       title,
       content,
       tag,
@@ -70,6 +46,7 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
       isDone: false,
       important: false
     };
+
     todoPostMutation.mutate(newTodo);
     setTitle("");
     setContent("");
@@ -142,7 +119,6 @@ const StFormBackground = styled.div`
   align-items: center;
   gap: 20px;
 
-  /* width: 600px; */
   height: 400px;
 
   margin-top: 50px;

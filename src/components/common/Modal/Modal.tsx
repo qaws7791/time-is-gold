@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import useModalStore, { IModalStatus } from "store/useModalStore";
+import type { IModalStatus } from "store";
+import { useModalStore } from "store";
 import * as Styled from "./Modal.style";
 
 interface IProps {
@@ -9,7 +10,7 @@ interface IProps {
   modalType?: string;
 }
 
-const Modal = (props: IProps) => {
+export const Modal = (props: IProps) => {
   const { children, closeTarget, modalType, ...rest } = props;
   const modalRef = useRef(null);
   const { closeModal } = useModalStore(state => state);
@@ -31,5 +32,3 @@ const Modal = (props: IProps) => {
     document.getElementById("modal-root") as HTMLElement
   );
 };
-
-export default Modal;

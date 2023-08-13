@@ -1,46 +1,19 @@
-import { useState, useEffect } from "react";
-import { Button, Tabs } from "antd";
-import supabase from "supabase/index";
-import { useNavigate } from "react-router-dom";
+import { Tabs } from "antd";
+import backgroundImg from "assets/timeisgold.png";
 import LoginForm from "components/Login/LoginForm";
+import * as St from "components/Login/LoginForm.style";
 import SignUpForm from "components/Login/SignUpForm";
-import timeisgold2 from "assets/timeisgold2.png";
-import * as St from "style/loginStyled";
-
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<any>({});
-  useEffect(() => {
-    async function getUserData() {
-      await supabase.auth.getUser().then(value => {
-        if (value.data?.user) {
-          console.log(value.data.user);
-          setUser(value.data.user);
-          value.data.user !== null ? navigate("/calendar") : navigate("/login");
-        }
-      });
-    }
-    getUserData();
-  }, []);
   const tabItems = [
-    {
-      key: "item-1",
-      tab: "로그인",
-      content: <LoginForm />
-    },
-    {
-      key: "item-2",
-      tab: "회원가입",
-      content: <SignUpForm />
-    }
+    { key: "item-1", tab: "로그인", content: <LoginForm /> },
+    { key: "item-2", tab: "회원가입", content: <SignUpForm /> }
   ];
 
   return (
-
     <St.Grid>
       <div>
-        <St.MainImg src={timeisgold2} alt="시간은 금이다 사진" />
+        <St.MainImg src={backgroundImg} alt="금괴 이미지" />
       </div>
       <St.LogInTabs>
         <Tabs>
@@ -52,7 +25,6 @@ const Login = () => {
         </Tabs>
       </St.LogInTabs>
     </St.Grid>
-
   );
 };
 
