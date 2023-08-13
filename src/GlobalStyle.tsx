@@ -7,7 +7,6 @@ const GlobalStyle = styled.createGlobalStyle`
 
   * {
     box-sizing: border-box;
-    /* color: #000000; */
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -32,7 +31,6 @@ const GlobalStyle = styled.createGlobalStyle`
     padding: 0;
     cursor: pointer;
   }
-
 `;
 
 export default GlobalStyle;

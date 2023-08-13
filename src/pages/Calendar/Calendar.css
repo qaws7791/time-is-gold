@@ -62,32 +62,42 @@
   vertical-align: middle;
 }
 
-/* 타임 그리드에서의 이벤트 */
+/* 타임 그리드(주별 & 일별)에서의 이벤트 */
 .fc-v-event {
   border-radius: 10px;
   padding: 5px;
   color: black;
 }
 
-/* 타임 그리드에서 시간 TEXT */
+/* 타임 그리드 하루종일 일정 */
+.fc-scrollgrid-shrink {
+  height: 70px;
+}
+
+/* 타임 그리드 30분당 일정 */
+.fc .fc-timegrid-slot-label {
+  height: 50px;
+}
+
+/* 타임 그리드(주별 & 일별)에서 시간 TEXT */
 .fc-timegrid-event .fc-event-time {
   font-size: 1rem;
-  color: black;
+  color: #727272;
 }
 
-/* 데이 그리드에서 시간 TEXT */
+/* 데이 그리드(월별)에서 시간 TEXT */
 .fc-direction-ltr .fc-daygrid-event .fc-event-time {
   font-size: 1rem;
-  color: black;
+  color: #727272;
 }
 
-/* 타임 그리드에서 내용 TEXT */
+/* 타임 그리드(주별 & 일별)에서 내용 TEXT */
 .fc-timegrid-event .fc-event-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: black;
 }
 
-/* 데이 그리드에서 내용 TEXT */
+/* 데이 그리드(월별)에서 내용 TEXT */
 .fc-daygrid-block-event .fc-event-title {
   font-size: 1rem;
   color: black;

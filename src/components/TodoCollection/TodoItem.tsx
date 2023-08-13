@@ -63,32 +63,29 @@ const TodoItem = ({ item }: Props) => {
   });
 
   return (
-    <>
-      {/* {isStartForm && <TodoUpdateForm item={item} setIsStartForm={setIsStartForm} />} */}
-      <StTodoCardWrapper onClick={openPromiseToUpdateModal}>
-        <StCardHeader>
-          <TodoTitle>{item.title}</TodoTitle>
-          {item.isDone ? (
-            <PiCheckFatFill className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+    <StTodoCardWrapper onClick={openPromiseToUpdateModal}>
+      <StCardHeader>
+        <TodoTitle>{item.title}</TodoTitle>
+        {item.isDone ? (
+          <PiCheckFatFill className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+        ) : (
+          <PiCheckFatBold className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+        )}
+      </StCardHeader>
+      <StCardBody>
+        <ContentIconBox>
+          <TodoContent>{item.content}</TodoContent>
+          {item.important ? (
+            <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
           ) : (
-            <PiCheckFatBold className="black isDoneCheck" onClick={e => onClickSwitchHandler(e)} />
+            <TiStarOutline className="star" onClick={onClickCheckImportance} />
           )}
-        </StCardHeader>
-        <StCardBody>
-          <ContentIconBox>
-            <TodoContent>{item.content}</TodoContent>
-            {item.important ? (
-              <TiStarFullOutline className="star" onClick={onClickCheckImportance} />
-            ) : (
-              <TiStarOutline className="star" onClick={onClickCheckImportance} />
-            )}
-          </ContentIconBox>
-        </StCardBody>
+        </ContentIconBox>
+      </StCardBody>
 
-        <StTagBox>{showTag}</StTagBox>
-        <StTodoDeadLineDate>~{item.deadLineDate}</StTodoDeadLineDate>
-      </StTodoCardWrapper>
-    </>
+      <StTagBox>{showTag}</StTagBox>
+      <StTodoDeadLineDate>~{item.deadLineDate}</StTodoDeadLineDate>
+    </StTodoCardWrapper>
   );
 };
 
@@ -101,11 +98,12 @@ const StTodoCardWrapper = styled.div`
   height: 250px;
 
   margin: 10px;
+  padding: 10px;
 
   background-color: white;
-  border: 1px solid black;
-  border-radius: 3px;
-  border-color: #d6d6d6;
+  border: 1px solid #d6d6d6;
+  border-radius: 20px;
+
   cursor: pointer;
 `;
 
@@ -125,7 +123,8 @@ const StCardHeader = styled.div`
 `;
 
 const TodoTitle = styled.p`
-  font-size: 16px;
+  width: 250px;
+  font-size: 20px;
   font-weight: bold;
   text-align: center;
 `;
@@ -160,8 +159,8 @@ const TodoContent = styled.p`
 
 const StTodoDeadLineDate = styled.p`
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 20px;
+  right: 20px;
 
   color: gray;
   font-size: 17px;

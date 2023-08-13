@@ -1,11 +1,6 @@
 import supabase from "supabase";
 import { ITodoForInsert, ITodoForUpdate } from "supabase/database.types";
 
-export const getTodos = async () => {
-  let { data: Todos } = await supabase.from("Todos").select("*");
-  return Todos;
-};
-
 interface TodoCheckImportance {
   id: number;
   important: boolean;
@@ -18,8 +13,13 @@ interface TodoSwitch {
 
 interface TodoUpdate {
   id: number;
-  updatedTodo: ITodoForUpdate;
+  inputValue: ITodoForUpdate;
 }
+
+export const getTodos = async (email: string) => {
+  let { data: Todos } = await supabase.from("Todos").select("*").eq("email", email);
+  return Todos;
+};
 
 export const switchTodo = async (todo: TodoSwitch) => {
   const { id, isDone } = todo;
@@ -39,8 +39,8 @@ export const postTodo = async (newTodo: ITodoForInsert) => {
 };
 
 export const updateTodo = async (todo: TodoUpdate) => {
-  const { id, updatedTodo } = todo;
-  const { error } = await supabase.from("Todos").update(updatedTodo).eq("id", id);
+  const { id, inputValue } = todo;
+  const { error } = await supabase.from("Todos").update(inputValue).eq("id", id);
   console.log("error", error);
 };
 

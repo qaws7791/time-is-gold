@@ -5,9 +5,9 @@ import * as St from "components/Login/LoginForm.style";
 import SignUpForm from "components/Login/SignUpForm";
 
 const Login = () => {
-  const tabItems = [
-    { key: "item-1", tab: "로그인", content: <LoginForm /> },
-    { key: "item-2", tab: "회원가입", content: <SignUpForm /> }
+  const items = [
+    { key: "1", label: "로그인", children: <LoginForm /> },
+    { key: "2", label: "회원가입", children: <SignUpForm /> }
   ];
 
   return (
@@ -16,13 +16,7 @@ const Login = () => {
         <St.MainImg src={backgroundImg} alt="금괴 이미지" />
       </div>
       <St.LogInTabs>
-        <Tabs>
-          {tabItems.map(item => (
-            <Tabs.TabPane key={item.key} tab={item.tab}>
-              {item.content}
-            </Tabs.TabPane>
-          ))}
-        </Tabs>
+        <Tabs items={items} />
       </St.LogInTabs>
     </St.Grid>
   );

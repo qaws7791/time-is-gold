@@ -1,21 +1,19 @@
 import { Select, Tag } from "antd";
 import { allTags } from "components/PageLayout/Sidebar/tag.data";
 import type { CustomTagProps } from "rc-select/lib/BaseSelect";
-import React, { useState } from "react";
-import { ITodo } from "supabase/database.types";
+import { cloneElement, useEffect, useState } from "react";
+import type { ITodo } from "supabase/database.types";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;
   item?: ITodo;
 }
 interface Option {
-  disabled?: boolean | undefined;
-  key?: string;
+  key: string;
   label: JSX.Element;
-  title?: string | undefined;
   value: string;
+  color?: string | null;
 }
-
 interface allTagsType {
   [key: string]: string;
 }
@@ -23,31 +21,56 @@ interface allTagsType {
 const SelectTags: React.FC<Props> = ({ setTag, item }) => {
   const [selectedItems, setSelectedItems] = useState<Option[]>([]);
 
-  const onChangeSelectItems = (e: Option[]) => {
-    if (!e) return;
-    const tagArrForDB = e.map(element => String(element.label.key));
-    setTag(tagArrForDB);
-    setSelectedItems(e);
-  };
-
-  let options = allTags.map((item: allTagsType) => {
+  const setTagComponent = (item: allTagsType) => {
+    const { value, label } = item;
     return {
-      value: item.value,
+      key: value,
+      value,
       label: (
-        <Tag key={item.label} color={item.value}>
-          {item.label}
+        <Tag key={label} color={value}>
+          {label}
         </Tag>
       )
     };
+  };
+
+  const mappingTag = allTags.map(setTagComponent);
+
+  useEffect(() => {
+    if (item && item.tag && item.tag.length > 0) {
+      const initialSelectedItems = mappingTag.filter(element => {
+        const findTarget = element.label.key;
+
+        const findTag = item.tag?.find(tagValue => tagValue === findTarget);
+
+        return findTag !== undefined;
+      });
+
+      setSelectedItems(initialSelectedItems);
+
+      setTag(item.tag);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item, setTag]);
+
+  const onChangeSelectItems = (values: Option[]) => {
+    if (!values) return;
+
+    const tagArrForDB = values.map(element => String(element.label.key));
+
+    setTag(tagArrForDB);
+    setSelectedItems(values);
+  };
+
+  const unSelectedTag = mappingTag.filter(optionItem => {
+    const findTarget = optionItem.label.key;
+
+    const findTag = selectedItems.find(selectedItem => selectedItem.label.key === findTarget);
+
+    return findTag === undefined;
   });
 
-  const unSelectedOptions = options.filter(optionItem => {
-    let isHere = selectedItems.find(
-      selectedItem => selectedItem.label.key === optionItem.label.key
-    );
-    return isHere === undefined ? true : false;
-  });
-  selectedItems.length >= 3 ? (options = []) : (options = unSelectedOptions);
+  const options = selectedItems.length >= 3 ? [] : unSelectedTag;
 
   return (
     <Select
@@ -63,7 +86,6 @@ const SelectTags: React.FC<Props> = ({ setTag, item }) => {
   );
 };
 
-// TODO 컴포넌트 분리하기
 const tagRender = (props: CustomTagProps) => {
   const { label, closable, onClose } = props;
 
@@ -71,7 +93,7 @@ const tagRender = (props: CustomTagProps) => {
     event.preventDefault();
     event.stopPropagation();
   };
-  const labelWithFuc = React.cloneElement(label as React.ReactElement, {
+  const labelWithFuc = cloneElement(label as React.ReactElement, {
     onMouseDown: onPreventMouseDown,
     closable,
     onClose,

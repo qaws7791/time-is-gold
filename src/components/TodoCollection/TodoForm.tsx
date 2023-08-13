@@ -1,9 +1,9 @@
 import { Button, DatePicker, Form, Input, Space } from "antd";
 import dayjs from "dayjs";
 import { useTodo } from "hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCurrentUser } from "store";
 import { styled } from "styled-components";
-import { ITodoForInsert } from "supabase/database.types";
 import SelectTags from "./SelectTags";
 import { whatIsToday } from "./today";
 
@@ -15,46 +15,43 @@ interface Props {
 }
 
 const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
-  const [deadLineDate, setDeadLineDate] = useState<string | undefined>(whatIsToday());
   const [tag, setTag] = useState<string[]>([]);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (e.target.name === "title") {
-      setTitle(e.target.value);
-    } else if (e.target.name === "content") {
-      setContent(e.target.value);
+  const { currentUserEmail: email } = useCurrentUser();
+  const initialValue = {
+    email,
+    isDone: false,
+    important: false,
+    title: "",
+    content: "",
+    tag,
+    deadLineDate: whatIsToday()
+  };
+
+  const [inputValue, setInputValue] = useState(initialValue);
+  const { todoPostMutation } = useTodo();
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
+
+  const onDayChange = (event: dayjs.Dayjs | null) => {
+    if (event) {
+      const deadLineDate = event.format().split("T")[0];
+      setInputValue({ ...inputValue, deadLineDate });
     }
   };
 
-  const onDayChange = (e: dayjs.Dayjs | null) => {
-    const checkDate = e?.format().split("T")[0];
-    setDeadLineDate(checkDate);
-  };
-  const { todoPostMutation } = useTodo();
+  useEffect(() => {
+    setInputValue({ ...inputValue, tag: tag });
+  }, [tag, setTag]);
 
   const onSubmitHandler = () => {
-    if (!title || !content || !deadLineDate) return alert("제목, 내용, 마감기한 설정은 필수입니다");
-
-    const newTodo: ITodoForInsert = {
-      email: "jieun2563@naver.com",
-      title,
-      content,
-      tag,
-      deadLineDate,
-      isDone: false,
-      important: false
-    };
-
-    todoPostMutation.mutate(newTodo);
-    setTitle("");
-    setContent("");
-    setDeadLineDate(whatIsToday());
+    todoPostMutation.mutate(inputValue);
+    setInputValue({ ...initialValue, deadLineDate: whatIsToday() });
     onConfirm();
   };
-
-  const onClickCloseHandler = () => onClose();
 
   const register = (name: string, value: string, maxLength: number) => ({
     name,
@@ -69,16 +66,24 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
       <Form
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 18 }}
-        style={{ width: 350 }}
+        style={{ width: 400, paddingLeft: "15px" }}
         size="middle"
         onFinish={onSubmitHandler}
       >
-        <Form.Item label="제목">
-          <Input {...register("title", title, 20)} placeholder="제목을 입력하세요" />
+        <Form.Item
+          label="제목"
+          name="title"
+          rules={[{ required: true, message: "제목을 입력해주세요!" }]}
+        >
+          <Input {...register("title", inputValue.title, 20)} placeholder="제목을 입력하세요" />
         </Form.Item>
-        <Form.Item label="내용">
+        <Form.Item
+          label="내용"
+          name="content"
+          rules={[{ required: true, message: "내용을 입력해주세요!" }]}
+        >
           <TextArea
-            {...register("content", content, 35)}
+            {...register("content", inputValue.content, 35)}
             style={{ height: 50, resize: "none" }}
             placeholder="내용을 입력하세요"
           />
@@ -88,7 +93,7 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
             <DatePicker
               name="deadLineDate"
               bordered={false}
-              defaultValue={dayjs(deadLineDate)}
+              defaultValue={dayjs(inputValue.deadLineDate)}
               onChange={e => onDayChange(e)}
             />
           </Space>
@@ -97,9 +102,9 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
         <Form.Item label="태그">
           <SelectTags setTag={setTag} />
         </Form.Item>
-        <Form.Item style={{ display: "flex", justifyContent: "center" }}>
+        <Form.Item style={{ display: "flex", justifyContent: "center", marginBottom: "0" }}>
           <Space size={"middle"}>
-            <Button type="default" onClick={onClickCloseHandler}>
+            <Button type="default" onClick={onClose}>
               닫기
             </Button>
             <Button type="primary" htmlType="submit">
@@ -119,7 +124,7 @@ const StFormBackground = styled.div`
   align-items: center;
   gap: 20px;
 
-  height: 400px;
+  height: 370px;
 
   margin-top: 50px;
 

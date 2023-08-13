@@ -15,9 +15,14 @@ const Home = () => {
   useEffect(() => {
     const watchAuthState = async () => {
       await supabase.auth.onAuthStateChange((event, session) => {
-        if (session && session.user.email) setCurrentUser(session.user.email);
-        if (event === "SIGNED_IN") {
+        if (session === null) {
+          navigate("/login");
+        }
+        if (event === "SIGNED_IN" && session && session.user.email) {
+          setCurrentUser(session.user.email);
+          navigate("/");
         } else if (event === "SIGNED_OUT") {
+          setCurrentUser("");
           navigate("/login");
         }
       });
@@ -34,7 +39,7 @@ const Home = () => {
   }, [pathname, changePage, changeMenu]);
 
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Header open={collapsed} setOpen={setCollapsed} />
       <Layout>
         <Sidebar open={collapsed} setOpen={setCollapsed} />

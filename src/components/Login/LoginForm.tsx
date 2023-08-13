@@ -25,7 +25,7 @@ const LoginForm = () => {
 
   return (
     <Form
-      name="normal_login"
+      name="normal_signUp"
       className="login-form"
       initialValues={{ remember: true }}
       onFinish={onFinish}
