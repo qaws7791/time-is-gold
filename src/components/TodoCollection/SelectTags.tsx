@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Select } from "antd";
 import type { SelectProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { getTags } from "api/tags";
+import { getTags } from "supabase/tags";
 
 interface Props {
   setTag: React.Dispatch<React.SetStateAction<string[]>>;

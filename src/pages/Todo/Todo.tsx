@@ -1,18 +1,24 @@
 // TODO 할일 추가 전역으로 관리하는 모달로 띄울 예정 (일단 임시 생성)
-
-import { useQuery } from "@tanstack/react-query";
-import { getTodos } from "api/todo";
-import TodoItem from "../../components/TodoCollection/TodoItem";
-import { styled } from "styled-components";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import TodoModal from "components/TodoCollection/TodoModal";
 import useOverlay from "hooks/useOverlay";
 import useMenuStore from "store/useMenuStore";
-import { ITodo } from "supabase/database.types";
+import { styled } from "styled-components";
+import { getTodos } from "supabase/todo";
+import TodoItem from "../../components/TodoCollection/TodoItem";
 
 const Todo: React.FC = () => {
   const overlay = useOverlay();
   const { menu } = useMenuStore();
-  const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
+  // const { data: allTodos, isLoading, isError } = useQuery(["todos"], getTodos);
+  const { data, isLoading, isError } = useInfiniteQuery({
+    queryKey: ["projects"],
+    queryFn: getTodos,
+    getNextPageParam: lastPage => {
+      console.log("lastPage", lastPage);
+    }
+  });
+  console.log("data :", data);
 
   const openPromiseToModal = () =>
     new Promise(resolve => {
@@ -34,24 +40,25 @@ const Todo: React.FC = () => {
     await openPromiseToModal();
   };
 
+  if (!data) return <p>로딩중</p>;
+  const allTodos = data.pages[0];
+
   let Todos = allTodos;
-  let todolistTitle = "";
+  let todoListTitle = "";
   // let
-  if (menu === "1") {
-    todolistTitle = "미완료";
-    Todos = allTodos?.filter(item => {
-      return item.isDone === false;
-    });
-  } else if (menu === "10") {
-    todolistTitle = "완료";
-    Todos = allTodos?.filter(item => {
-      return item.isDone === true;
-    });
-  } else if (menu === "20") {
-    todolistTitle = "중요";
-    Todos = allTodos?.filter(item => {
-      return item.important === true && item.isDone === false;
-    });
+
+  switch (menu) {
+    case "1":
+      todoListTitle = "미완료";
+      Todos = allTodos!.filter(item => item.isDone === false);
+      break;
+    case "10":
+      todoListTitle = "완료";
+      Todos = allTodos!.filter(item => item.isDone === true);
+      break;
+    case "20":
+      todoListTitle = "중요";
+      Todos = allTodos!.filter(item => item.important === true && item.isDone === false);
   }
   if (isLoading) return <div>내 투두 주이소</div>;
   if (isError) return <div>에러남</div>;
@@ -60,7 +67,7 @@ const Todo: React.FC = () => {
     <div>
       {/* {isStartForm && <TodoModal />} */}
       <div>
-        <p>{todolistTitle}</p>
+        <p>{todoListTitle}</p>
         <button onClick={onClickStartForm}>+</button>
       </div>
       <StWrapperTodos>

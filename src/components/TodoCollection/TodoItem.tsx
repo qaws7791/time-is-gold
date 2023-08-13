@@ -1,14 +1,12 @@
 // TODO tag는 후순위로 미루기 (할 때 datatype등 다시 설정해줘야함)
-import { ITodo } from "supabase/database.types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { checkTodoImportance, switchTodo } from "api/todo";
-import { styled } from "styled-components";
-import { AiOutlineCheck } from "react-icons/ai";
-import "../../icon.css";
+import { useTodo } from "hooks";
 import useOverlay from "hooks/useOverlay";
+import { AiOutlineCheck } from "react-icons/ai";
+import { TiStarFullOutline, TiStarOutline } from "react-icons/ti";
+import { styled } from "styled-components";
+import { ITodo } from "supabase/database.types";
+import "../../icon.css";
 import TodoUpdateModal from "./TodoUpdateModal";
-import { TiStarFullOutline } from "react-icons/ti";
-import { TiStarOutline } from "react-icons/ti";
 
 type Props = {
   item: ITodo;
@@ -18,19 +16,7 @@ export type isDoneType = { isDone: boolean };
 const TodoItem = ({ item }: Props) => {
   const overlay = useOverlay();
 
-  const queryClient = useQueryClient();
-
-  const todoIsDoneMutation = useMutation(switchTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
-
-  const todoImportantMutation = useMutation(checkTodoImportance, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
+  const { todoIsDoneMutation, todoImportantMutation } = useTodo();
 
   const onClickSwitchHandler = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     e.stopPropagation();

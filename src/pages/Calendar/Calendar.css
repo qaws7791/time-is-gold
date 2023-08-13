@@ -47,47 +47,13 @@
   margin: 20px;
 }
 
-/* .fc-dayGridMonth-view .fc-view .fc-daygrid {
-  height: 100px;
-  background-color: black;
-} */
-
-/* .fc-daygrid {
-  height: 100px;
-  background-color: black;
-} */
-
-/* .fc-scrollgrid .fc-scrollgrid-liquid {
-  height: 100px;
-  background-color: black;
-} */
-
-/* .fc-scrollgrid-section .fc-scrollgrid-section-header {
-  height: 100px;
-  background-color: black;
-} */
-
-/* 요일 밑에 공간 생김 */
-/* .fc-scroller-harness {
-  height: 100px;
-  background-color: black;
-} */
-
 .fc-daygrid-event {
   border: none;
 }
 
-/* .fc-scroller {
-  height: 100px;
-  background-color: black;
-} */
-
 /* 요일 행 높이지정 */
 .fc .fc-scrollgrid-section table {
-  /* display: flex; */
-  /* text-align: center; */
   height: 50px;
-  /* vertical-align: middle; */
 }
 
 /* 요일 행 TEXT 중간 정렬 */
@@ -95,22 +61,6 @@
 .fc th {
   vertical-align: middle;
 }
-
-/* .fc .fc-scrollgrid-section {
-  display: flex;
-  height: 50px;
-} */
-
-/* .fc .fc-col-header-cell-cushion {
-  align-self: center;
-  justify-self: center;
-} */
-
-/* .fc-col-header {
-  height: 300px;
-  background-color: black;
-  vertical-align: middle;
-} */
 
 /* 타임 그리드에서의 이벤트 */
 .fc-v-event {

@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useSchedule } from "hooks";
 import { useState } from "react";
 import { useModalStore } from "store";
-import { ModifyCalendarForm } from "./ModifyCalendarForm";
+import { ModifyCalendarForm } from "./Form/ModifyCalendarForm";
 
 export const DetailSchedule = () => {
   // Modify Form으로 전환하는 상태
@@ -14,6 +14,7 @@ export const DetailSchedule = () => {
   const { closeModal } = useModalStore(state => state);
 
   const { selectedData, deleteMutation } = useSchedule();
+  console.log("selectedData :", selectedData);
 
   const { data: selectedSchedule, isError, isLoading } = selectedData;
 

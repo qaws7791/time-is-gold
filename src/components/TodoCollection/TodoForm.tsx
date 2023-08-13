@@ -1,13 +1,11 @@
-import { Input, DatePicker, Space } from "antd";
-import { useState } from "react";
+import { DatePicker, Input, Space } from "antd";
 import dayjs from "dayjs";
-import { whatIsToday } from "./today";
-import { postTodo } from "api/todo";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ITodoforInsert } from "supabase/database.types";
+import { useTodo } from "hooks";
+import { useState } from "react";
 import { styled } from "styled-components";
+import { ITodoforInsert } from "supabase/database.types";
 import SelectTags from "./SelectTags";
-import { getTags } from "api/tags";
+import { whatIsToday } from "./today";
 
 const { TextArea } = Input;
 
@@ -19,7 +17,6 @@ interface Props {
 const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
   const now = dayjs();
   console.log("💟", now.format());
-  const queryClient = useQueryClient();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [deadline, setDeadline] = useState<string | undefined>(whatIsToday());
@@ -37,12 +34,7 @@ const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
     const checkDate = e?.format().split("T")[0];
     setDeadline(checkDate);
   };
-
-  const todoPostMutation = useMutation(postTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["todos"]);
-    }
-  });
+  const { todoPostMutation } = useTodo();
 
   // TODO email : auth연결하면 수정해줘야함. + tag 기능 추가하면 수정해줘야함. (현재 임의로 지정)
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {

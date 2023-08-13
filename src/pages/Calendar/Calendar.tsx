@@ -3,11 +3,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { DetailSchedule, PostCalendarForm } from "components/Calendar";
 import { Modal } from "components/common";
 import { useSchedule } from "hooks";
 import { useModalStore, useScheduleStore } from "store";
 import "./Calendar.css";
-import { DetailSchedule, PostCalendarForm } from "./components";
 
 export const Calendar = () => {
   const { response, patchMutation } = useSchedule();

@@ -1,37 +1,33 @@
-import React from 'react'
-import {
-  AppstoreOutlined,
-} from '@ant-design/icons';
-import { Menu } from 'antd';
-import type { MenuProps } from 'antd/es/menu';
-import useMenuStore from 'store/useMenuStore';
-import ColorDot from 'components/ColorDot';
+import { AppstoreOutlined } from "@ant-design/icons";
+import { Menu } from "antd";
+import type { MenuProps } from "antd/es/menu";
+import ColorDot from "components/ColorDot";
+import React from "react";
+import useMenuStore from "store/useMenuStore";
 
-
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
   label: React.ReactNode,
   key?: React.Key | null,
   icon?: React.ReactNode,
-  children?: MenuItem[],
+  children?: MenuItem[]
 ): MenuItem {
   return {
     key,
     icon,
     children,
-    label,
+    label
   } as MenuItem;
 }
 
-
 const items: MenuItem[] = [
-  getItem('전체보기', '1', <AppstoreOutlined />),
-  getItem('카테고리 1', '10', <ColorDot color='#d8d3fd'/>), 
-  getItem('카테고리 2', '20', <ColorDot color='#e3f1f6'/>),
-  getItem('카테고리 3', '30', <ColorDot color='#e2f4e7'/>),
-  getItem('카테고리 4', '40', <ColorDot color='#fbefd9'/>),
-  getItem('카테고리 5', '50', <ColorDot color='#e5e5e5'/>),
+  getItem("전체보기", "1", <AppstoreOutlined />),
+  getItem("카테고리 1", "#FFD1DF", <ColorDot color="#FFD1DF" />),
+  getItem("카테고리 2", "#FFE0B2", <ColorDot color="#FFE0B2" />),
+  getItem("카테고리 3", "#D0F0C0", <ColorDot color="#D0F0C0" />),
+  getItem("카테고리 4", "#B3E0FF", <ColorDot color="#B3E0FF" />),
+  getItem("카테고리 5", "#E6CCE6", <ColorDot color="#E6CCE6" />)
 ];
 
 // const CATEGORY_COLORS = {
@@ -42,28 +38,28 @@ const items: MenuItem[] = [
 // CATEGORY_COLORS['red']
 
 const CalendarSubMenu = () => {
-  const { menu, changeMenu } = useMenuStore()
-  let selectedKey = '1'
-  if(menu) {
-      for (let i = 0; i < items.length; i++) {
-        if (items[i]!.key === menu) {
-          selectedKey = String(items[i]!.key);
-          break
-        }
+  const { menu, changeMenu } = useMenuStore();
+  let selectedKey = "1";
+  if (menu) {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i]!.key === menu) {
+        selectedKey = String(items[i]!.key);
+        break;
       }
+    }
   }
 
   return (
     <Menu
-        defaultSelectedKeys={[selectedKey]}
-        mode='inline'
-        items={items}
-        onSelect={({ item, key, keyPath, selectedKeys, domEvent })=>{
-          console.log(key)
-          changeMenu(key)
-        }}
+      defaultSelectedKeys={[selectedKey]}
+      mode="inline"
+      items={items}
+      onSelect={({ item, key, keyPath, selectedKeys, domEvent }) => {
+        console.log(key);
+        changeMenu(key);
+      }}
     />
-  )
-}
+  );
+};
 
-export default CalendarSubMenu
+export default CalendarSubMenu;

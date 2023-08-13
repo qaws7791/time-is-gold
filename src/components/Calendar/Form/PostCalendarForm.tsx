@@ -1,46 +1,38 @@
-import { Button, DatePicker, DatePickerProps, Form, Input, Space, Switch, Typography } from "antd";
-import { RangePickerProps } from "antd/es/date-picker";
+import { Button, DatePicker, Form, Input, Space, Switch, Typography } from "antd";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCalendarForm, useSchedule } from "hooks";
 import { useState } from "react";
-import type { ISchedulesRow } from "supabase/database.types";
-import { ColorSelect } from "../Calendar.style";
+import { useCurrentUser, useModalStore, useScheduleStore } from "store";
+import type { TBackgroundColor } from "supabase/database.types";
+import { ColorSelect } from "./Form.style";
 
-dayjs.extend(customParseFormat);
+export const PostCalendarForm = () => {
+  const { selectDate } = useScheduleStore();
+  const start = selectDate[0];
+  const end = selectDate[1];
+  const { currentUserEmail: email } = useCurrentUser();
 
-interface IProps {
-  IsModifyHandler: () => void;
-  selectedSchedule: ISchedulesRow;
-}
+  const initialValue = {
+    email,
+    title: "",
+    start,
+    end,
+    backgroundColor: "#FFD1DF" as TBackgroundColor
+  };
 
-export const ModifyCalendarForm = ({ IsModifyHandler, selectedSchedule }: IProps) => {
-  const { id, title, start, end, backgroundColor } = selectedSchedule;
+  const { inputValue, setInputValue, register, colorRegister } = useCalendarForm(initialValue);
+  const { postMutation } = useSchedule();
+  const { closeModal } = useModalStore();
 
-  const initialValue = { title, start, end, backgroundColor };
-
-  const {
-    inputValue: updateValue,
-    setInputValue: setUpdateValue,
-    register,
-    colorRegister
-  } = useCalendarForm(initialValue);
-  const { patchMutation } = useSchedule();
-
-  const onSubmit = () => {
-    patchMutation.mutate({ updateValue, id });
-    IsModifyHandler();
+  const onSubmit = async () => {
+    postMutation.mutate(inputValue);
+    closeModal("postCalendarForm");
   };
 
   const [isAllDay, setIsAllDay] = useState(true);
   const allDayCheckHandler = (checked: boolean) => setIsAllDay(checked);
 
-  const onChangDateHandler = (
-    value: DatePickerProps["value"] | RangePickerProps["value"],
-    dateString: [string, string] | string
-  ) => {
-    setUpdateValue({ ...updateValue, start: dateString[0], end: dateString[1] });
-  };
+  const onChangDateHandler = () => setInputValue({ ...inputValue, start, end });
 
   return (
     <Form
@@ -50,12 +42,7 @@ export const ModifyCalendarForm = ({ IsModifyHandler, selectedSchedule }: IProps
       onFinish={onSubmit}
     >
       <Form.Item label="제목" name="title">
-        <Input
-          {...register("title")}
-          defaultValue={selectedSchedule.title}
-          size="large"
-          placeholder={title}
-        />
+        <Input {...register("title")} size="large" placeholder="Title" />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 3 }}>
         <Space size={150}>
@@ -66,12 +53,12 @@ export const ModifyCalendarForm = ({ IsModifyHandler, selectedSchedule }: IProps
       <Form.Item wrapperCol={{ span: 15, offset: 3 }} name="range-picker" label="일정">
         {(isAllDay && (
           <DatePicker.RangePicker
-            defaultValue={[dayjs(start), dayjs(end)]}
+            defaultValue={[dayjs(selectDate[0]), dayjs(selectDate[1])]}
             onChange={onChangDateHandler}
           />
         )) || (
           <DatePicker.RangePicker
-            defaultValue={[dayjs(start), dayjs(end)]}
+            defaultValue={[dayjs(selectDate[0]), dayjs(selectDate[1])]}
             showTime={{ format: "HH:mm" }}
             format="YYYY-MM-DD HH:mm"
             onChange={onChangDateHandler}
@@ -87,11 +74,8 @@ export const ModifyCalendarForm = ({ IsModifyHandler, selectedSchedule }: IProps
       </Form.Item>
       <Form.Item style={{ display: "flex", justifyContent: "center" }}>
         <Space size={"middle"}>
-          <Button type="default" onClick={IsModifyHandler}>
-            취소
-          </Button>
           <Button type="primary" htmlType="submit">
-            저장
+            작성하기
           </Button>
         </Space>
       </Form.Item>

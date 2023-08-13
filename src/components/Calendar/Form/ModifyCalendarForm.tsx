@@ -1,32 +1,35 @@
 import { Button, DatePicker, DatePickerProps, Form, Input, Space, Switch, Typography } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCalendarForm, useSchedule } from "hooks";
 import { useState } from "react";
-import { useModalStore, useScheduleStore } from "store";
-import type { TBackgroundColor } from "supabase/database.types";
-import { ColorSelect } from "../Calendar.style";
+import type { ISchedulesRow } from "supabase/database.types";
+import { ColorSelect } from "./Form.style";
 
-export const PostCalendarForm = () => {
-  const { selectDate } = useScheduleStore();
+dayjs.extend(customParseFormat);
 
-  const initialValue = {
-    email: "",
-    title: "",
-    start: selectDate[0],
-    end: selectDate[1],
-    backgroundColor: "#FFD1DF" as TBackgroundColor
-  };
+interface IProps {
+  IsModifyHandler: () => void;
+  selectedSchedule: ISchedulesRow;
+}
 
-  const { inputValue, setInputValue, register, colorRegister } = useCalendarForm(initialValue);
-  const { postMutation } = useSchedule();
-  const { closeModal } = useModalStore();
+export const ModifyCalendarForm = ({ IsModifyHandler, selectedSchedule }: IProps) => {
+  const { id, title, start, end, backgroundColor } = selectedSchedule;
 
-  // event: FormEvent<HTMLFormElement>
-  // event.preventDefault();
-  const onSubmit = async () => {
-    postMutation.mutate(inputValue);
-    closeModal("postCalendarForm");
+  const initialValue = { title, start, end, backgroundColor };
+
+  const {
+    inputValue: updateValue,
+    setInputValue: setUpdateValue,
+    register,
+    colorRegister
+  } = useCalendarForm(initialValue);
+  const { patchMutation } = useSchedule();
+
+  const onSubmit = () => {
+    patchMutation.mutate({ updateValue, id });
+    IsModifyHandler();
   };
 
   const [isAllDay, setIsAllDay] = useState(true);
@@ -36,7 +39,7 @@ export const PostCalendarForm = () => {
     value: DatePickerProps["value"] | RangePickerProps["value"],
     dateString: [string, string] | string
   ) => {
-    setInputValue({ ...inputValue, start: dateString[0], end: dateString[1] });
+    setUpdateValue({ ...updateValue, start: dateString[0], end: dateString[1] });
   };
 
   return (
@@ -46,9 +49,13 @@ export const PostCalendarForm = () => {
       style={{ width: 350 }}
       onFinish={onSubmit}
     >
-      {/* <Input {...register("email")} size="large" placeholder="email" /> */}
       <Form.Item label="제목" name="title">
-        <Input {...register("title")} size="large" placeholder="Title" />
+        <Input
+          {...register("title")}
+          defaultValue={selectedSchedule.title}
+          size="large"
+          placeholder={title}
+        />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 3 }}>
         <Space size={150}>
@@ -59,12 +66,12 @@ export const PostCalendarForm = () => {
       <Form.Item wrapperCol={{ span: 15, offset: 3 }} name="range-picker" label="일정">
         {(isAllDay && (
           <DatePicker.RangePicker
-            defaultValue={[dayjs(selectDate[0]), dayjs(selectDate[1])]}
+            defaultValue={[dayjs(start), dayjs(end)]}
             onChange={onChangDateHandler}
           />
         )) || (
           <DatePicker.RangePicker
-            defaultValue={[dayjs(selectDate[0]), dayjs(selectDate[1])]}
+            defaultValue={[dayjs(start), dayjs(end)]}
             showTime={{ format: "HH:mm" }}
             format="YYYY-MM-DD HH:mm"
             onChange={onChangDateHandler}
@@ -80,8 +87,11 @@ export const PostCalendarForm = () => {
       </Form.Item>
       <Form.Item style={{ display: "flex", justifyContent: "center" }}>
         <Space size={"middle"}>
+          <Button type="default" onClick={IsModifyHandler}>
+            취소
+          </Button>
           <Button type="primary" htmlType="submit">
-            작성하기
+            저장
           </Button>
         </Space>
       </Form.Item>
