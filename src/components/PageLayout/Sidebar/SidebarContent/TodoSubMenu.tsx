@@ -41,21 +41,11 @@ const TodoSubMenu = () => {
     // return getItem(tagItem, String(index + 41));
     let color = "";
     // TODO 색상 정하기
-    //magenta 색상 color: #c41d7f; background : #fff0f6; border-color : #ffadd2;
-    //volcano 색상 color: #d4380d; background: #fff2e8; border-color: #ffbb96;
-    //green 색상 color: #389e0d; background: #f6ffed; border-color: #b7eb8f;
-    //blue 색상 color: #0958d9; background: #e6f4ff; border-color: #91caff;
-    //purple 색상 color: #531dab; background: #f9f0ff; border-color: #d3adf7;
-    if (tagItem === "edu") color = "#fff0f6";
-    else if (tagItem === "work") color = "#fff2e8";
-    else if (tagItem === "exercise") color = "#f6ffed";
-    else if (tagItem === "chore") color = "#e6f4ff";
-    else if (tagItem === "entertain") color = "#f9f0ff";
-    // if (tagItem === "edu") color = "#c41d7f";
-    // else if (tagItem === "work") color = "#d4380d";
-    // else if (tagItem === "exercise") color = "#389e0d";
-    // else if (tagItem === "chore") color = "#0958d9";
-    // else if (tagItem === "entertain") color = "#531dab";
+    if (tagItem === "edu") color = "#ffadd2";
+    else if (tagItem === "work") color = "#ffbb96";
+    else if (tagItem === "exercise") color = "#b7eb8f";
+    else if (tagItem === "chore") color = "#91caff";
+    else if (tagItem === "entertain") color = "#d3adf7";
     return getItem(tagItem, tagItem, <FaCircle style={{ fill: color }} />);
   });
   // tagItemsArr.unshift(getItem("전체태그", "40"));
