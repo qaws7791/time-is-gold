@@ -1,0 +1,46 @@
+/* .gray {
+  fill: #eee;
+} */
+
+.black {
+  fill: #000;
+}
+
+.isDoneCheck {
+  width: 25px;
+  height: 25px;
+}
+
+.star {
+  fill: #ffd11a;
+  width: 28px;
+  height: 28px;
+}
+
+.tagplus {
+  /* position: absolute; */
+  z-index: 2;
+  /* right: 0;
+  top: 0; */
+}
+
+.todoPlus_button {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.tagplus {
+  cursor: pointer;
+}
+
+.tagminus {
+  /* position: absolute; */
+  z-index: 2;
+  /* right: 0;
+  top: 0; */
+}
+
+.tagminus {
+  cursor: pointer;
+}
