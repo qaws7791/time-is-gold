@@ -8,7 +8,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
-      <OverlayRoot/>
+      <OverlayRoot />
     </QueryClientProvider>
   );
 }

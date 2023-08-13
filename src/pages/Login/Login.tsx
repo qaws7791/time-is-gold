@@ -1,42 +1,32 @@
-import { useState, useEffect } from "react";
-import { Button, Tabs } from "antd";
-import supabase from "supabase/index";
-import LoginStore from "store/LoginStore";
-import { useNavigate } from "react-router-dom";
+import { Tabs } from "antd";
+import backgroundImg from "assets/timeisgold.png";
 import LoginForm from "components/Login/LoginForm";
+import * as St from "components/Login/LoginForm.style";
 import SignUpForm from "components/Login/SignUpForm";
-import timeisgold from "assets/timeisgold.png";
-import timeisgold2 from "assets/timeisgold2.png";
-import * as St from "style/loginStyled";
 
 const Login = () => {
-  //const { logoutHandler } = LoginStore();
-  const navigate = useNavigate();
-  // supabase.auth.onAuthStateChange(async event => {
-  //   if (event !== "SIGNED_OUT") {
-  //     navigate("/calendar");
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // });
-
   const tabItems = [
-    {
-      key: "item-1",
-      tab: "로그인",
-      content: <LoginForm />
-    },
-    {
-      key: "item-2",
-      tab: "회원가입",
-      content: <SignUpForm />
-    }
+    { key: "item-1", tab: "로그인", content: <LoginForm /> },
+    { key: "item-2", tab: "회원가입", content: <SignUpForm /> }
   ];
+
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   async function getUserData() {
+  //     const { data, error } = await supabase.auth.getUser();
+  //     if (data.user) {
+  //       console.log("data :", data);
+  //       data.user !== null ? navigate("/") : navigate("/login");
+  //     }
+  //     if (error) console.log("error :", error);
+  //   }
+  //   getUserData();
+  // }, []);
 
   return (
     <St.Grid>
       <div>
-        <St.MainImg src={timeisgold2} alt="시간은 금이다 사진" />
+        <St.MainImg src={backgroundImg} alt="금괴 이미지" />
       </div>
       <St.LogInTabs>
         <Tabs>
@@ -46,7 +36,6 @@ const Login = () => {
             </Tabs.TabPane>
           ))}
         </Tabs>
-        {/*   <Button onClick={() => logoutHandler()}>로그아웃</Button>*/}
       </St.LogInTabs>
     </St.Grid>
   );

@@ -1,31 +1,21 @@
-import { CheckOutlined, AppstoreOutlined, StarOutlined, TagsOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, CheckOutlined, StarOutlined, TagsOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import type { MenuProps } from "antd/es/menu";
 import useMenuStore from "store/useMenuStore";
-import { PiCheckFatBold } from "react-icons/pi";
-import { PiCheckFatFill } from "react-icons/pi";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
-  getItem("미완료", "1", <PiCheckFatBold />),
-  getItem("완료", "10", <PiCheckFatFill />),
-  // getItem("완료", "20", <CheckOutlined />),
-  getItem("중요", "20", <StarOutlined />),
+  getItem("전체", "all", <AppstoreOutlined />),
+  getItem("중요", "important", <StarOutlined />),
+  getItem("완료", "completed", <CheckOutlined />),
   getItem(
     "태그",
-    "30",
+    "tags",
     <TagsOutlined />,
-    [getItem("태그 1", "41"), getItem("태그 2", "42")],
+    [getItem("태그 1", "tag-tag1"), getItem("태그 2", "tag-tag2")],
     "group"
   )
-  // getItem(
-  //   "태그",
-  //   "30",
-  //   <TagsOutlined />,
-  //   [getItem("태그 1", "41"), getItem("태그 2", "42")],
-  //   "group"
-  // )
 ];
 
 function getItem(
@@ -46,7 +36,7 @@ function getItem(
 
 const TodoSubMenu = () => {
   const { menu, changeMenu } = useMenuStore();
-  let selectedKey = "1";
+  let selectedKey = "all";
   if (menu) {
     for (let i = 0; i < items.length; i++) {
       if (items[i]!.key === menu) {
@@ -61,8 +51,8 @@ const TodoSubMenu = () => {
       defaultSelectedKeys={[selectedKey]}
       mode="inline"
       items={items}
+      selectedKeys={[menu]}
       onSelect={({ item, key, keyPath, selectedKeys, domEvent }) => {
-        console.log(key);
         changeMenu(key);
       }}
     />

@@ -34,32 +34,22 @@ export const Calendar = () => {
   };
 
   if (isLoading) {
-    return <p>로딩중</p>;
+    return (
+      <FullCalendar
+        {...fullCalendarOption}
+        events={[]} // 달력에 표시 될 이벤트
+      />
+    );
   }
 
   if (isError) {
     return <p>에러</p>;
   }
 
-  // view type
-  const year = "numeric";
-  const month = "long";
-  const day = "numeric";
-  const weekday = "short";
-
   return (
     <>
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{ left: "title", right: "dayGridMonth,timeGridWeek,timeGridDay today" }}
-        footerToolbar={{ left: "prevYear,prev", right: "next,nextYear" }}
-        views={{
-          dayGridMonth: { titleFormat: { year, month } },
-          week: { titleFormat: { month, day }, dayHeaderFormat: { weekday, day } },
-          day: { titleFormat: { month, day }, dayHeaderFormat: { weekday, day } }
-        }}
-        buttonText={{ today: "오늘", month: "월별", week: "주별", day: "일별" }}
+        {...fullCalendarOption}
         events={scheduleData} // 달력에 표시 될 이벤트
         eventClick={eventClick} // 이벤트 클릭시
         eventChange={eventChange} // 이벤트 drop 혹은 resize 될 때
@@ -84,4 +74,23 @@ export const Calendar = () => {
       )}
     </>
   );
+};
+
+// view type
+const year = "numeric";
+const month = "long";
+const day = "numeric";
+const weekday = "short";
+
+const fullCalendarOption: any = {
+  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+  initialView: "dayGridMonth",
+  headerToolbar: { left: "title", right: "dayGridMonth,timeGridWeek,timeGridDay today" },
+  footerToolbar: { left: "prevYear,prev", right: "next,nextYear" },
+  views: {
+    dayGridMonth: { titleFormat: { year, month } },
+    week: { titleFormat: { month, day }, dayHeaderFormat: { weekday, day } },
+    day: { titleFormat: { month, day }, dayHeaderFormat: { weekday, day } }
+  },
+  buttonText: { today: "오늘", month: "월별", week: "주별", day: "일별" }
 };

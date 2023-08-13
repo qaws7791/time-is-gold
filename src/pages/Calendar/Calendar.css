@@ -66,26 +66,31 @@
 .fc-v-event {
   border-radius: 10px;
   padding: 5px;
+  color: black;
 }
 
 /* 타임 그리드에서 시간 TEXT */
 .fc-timegrid-event .fc-event-time {
   font-size: 1rem;
+  color: black;
 }
 
 /* 데이 그리드에서 시간 TEXT */
 .fc-direction-ltr .fc-daygrid-event .fc-event-time {
   font-size: 1rem;
+  color: black;
 }
 
 /* 타임 그리드에서 내용 TEXT */
 .fc-timegrid-event .fc-event-title {
   font-size: 1.5rem;
+  color: black;
 }
 
 /* 데이 그리드에서 내용 TEXT */
 .fc-daygrid-block-event .fc-event-title {
   font-size: 1rem;
+  color: black;
 }
 
 .fc-event-main-frame {

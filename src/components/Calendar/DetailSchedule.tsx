@@ -14,7 +14,6 @@ export const DetailSchedule = () => {
   const { closeModal } = useModalStore(state => state);
 
   const { selectedData, deleteMutation } = useSchedule();
-  console.log("selectedData :", selectedData);
 
   const { data: selectedSchedule, isError, isLoading } = selectedData;
 
@@ -23,10 +22,12 @@ export const DetailSchedule = () => {
     closeModal("detailSchedule");
   };
 
+  // TODO isLoading 컴포넌트 만들기
   if (isLoading && selectedSchedule === undefined) {
     return <Button type="text" icon={<PoweroffOutlined />} loading />;
   }
 
+  // TODO isError 컴포넌트 만들기
   if (isError) return <p>에러</p>;
 
   const { title, start, end } = selectedSchedule;

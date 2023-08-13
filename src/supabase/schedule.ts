@@ -5,7 +5,7 @@ import type { ISchedulesInsert, ISchedulesUpdate } from "./database.types";
 export const getData = async ({ menu, email }: { menu: string; email: string }) => {
   try {
     const { data: schedules } =
-      menu === "1"
+      menu === "all"
         ? await supabase.from("schedules").select("*").eq("email", email)
         : await supabase
             .from("schedules")

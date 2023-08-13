@@ -1,93 +1,67 @@
-import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Space } from "antd";
-import LoginStore from "store/LoginStore";
-import * as St from "style/loginStyled";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Button, Form, Input } from "antd";
+import * as St from "components/Login/LoginForm.style";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { login } from "supabase/auth";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 
 const LoginForm = () => {
-  const {
-    email,
-    password,
-    EmailChangeHandler,
-    PasswordChangeHandler,
-    loginHandler,
-    googleLoginHandler,
-    clear
-  } = LoginStore();
-  const [form] = Form.useForm();
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const initialValue = { email: "", password: "" };
+  const [inputValue, setInputValue] = useState(initialValue);
+
+  const navigate = useNavigate();
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setInputValue({ ...inputValue, [name]: value });
   };
-  const resetField = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    form.setFieldsValue({
-      email: "",
-      password: "",
-      passwordCheck: ""
-    });
+
+  const onFinish = () => {
+    login(inputValue);
+    navigate("/");
+    setInputValue(initialValue);
   };
+
   return (
-    <div>
-      <Form
-        form={form}
-        name="normal_login"
-        className="login-form"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-      >
-        <Form.Item name="email" rules={[{ required: true, message: "Please input your E-mail!" }]}>
-          <Input
-            prefix={<MailOutlined className="site-form-item-icon" />}
-            type="text"
-            placeholder="e-mail"
-            value={email}
-            name="email"
-            onChange={EmailChangeHandler}
-          />
-        </Form.Item>
-        <Form.Item
+    <Form
+      name="normal_login"
+      className="login-form"
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+    >
+      <Form.Item name="email" rules={[{ required: true, message: "이메일을 입력해주세요!" }]}>
+        <Input
+          status="warning"
+          prefix={<MailOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
+          type="email"
+          placeholder="E-mail"
+          name="email"
+          value={inputValue.email}
+          onChange={onChange}
+        />
+      </Form.Item>
+      <Form.Item name="password" rules={[{ required: true, message: "비밀번호를 입력해주세요!" }]}>
+        <Input
+          status="warning"
+          prefix={<LockOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
+          type="password"
+          placeholder="password"
           name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="password"
-            value={password}
-            name="password"
-            onChange={PasswordChangeHandler}
-          />
+          value={inputValue.password}
+          onChange={onChange}
+        />
+      </Form.Item>
+
+      <St.Flex>
+        <Form.Item>
+          <Button htmlType="submit" type="link">
+            로그인
+          </Button>
+          <GoogleLoginButton />
         </Form.Item>
-
-        <St.Flex>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              style={{ backgroundColor: "yellow" }}
-              onClick={e => {
-                loginHandler(e);
-                resetField(e); // 로그인 시에 password 필드 초기화
-              }}
-            >
-              로그인
-            </Button>
-
-            <Space direction="vertical">
-              <Space wrap>
-                <Button
-                  type="primary"
-                  icon={<GoogleOutlined />}
-                  style={{ backgroundColor: "yellow" }}
-                  onClick={googleLoginHandler}
-                >
-                  구글 로그인
-                </Button>
-              </Space>
-            </Space>
-          </Form.Item>
-        </St.Flex>
-      </Form>
-    </div>
+      </St.Flex>
+    </Form>
   );
 };
 

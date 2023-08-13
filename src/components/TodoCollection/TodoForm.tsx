@@ -16,7 +16,6 @@ interface Props {
 
 const TodoForm: React.FC<Props> = ({ onConfirm, onClose }) => {
   const now = dayjs();
-  console.log("💟", now.format());
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [deadline, setDeadline] = useState<string | undefined>(whatIsToday());

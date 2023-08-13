@@ -13,16 +13,12 @@ function getItem(
   icon?: React.ReactNode,
   children?: MenuItem[]
 ): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label
-  } as MenuItem;
+  console.log("key :", key);
+  return { key, icon, children, label } as MenuItem;
 }
 
 const items: MenuItem[] = [
-  getItem("전체보기", "1", <AppstoreOutlined />),
+  getItem("전체보기", "all", <AppstoreOutlined />),
   getItem("카테고리 1", "#FFD1DF", <ColorDot color="#FFD1DF" />),
   getItem("카테고리 2", "#FFE0B2", <ColorDot color="#FFE0B2" />),
   getItem("카테고리 3", "#D0F0C0", <ColorDot color="#D0F0C0" />),
@@ -30,16 +26,9 @@ const items: MenuItem[] = [
   getItem("카테고리 5", "#E6CCE6", <ColorDot color="#E6CCE6" />)
 ];
 
-// const CATEGORY_COLORS = {
-//   red: "#ff0000",
-//   green: "#00ff00",
-// }
-
-// CATEGORY_COLORS['red']
-
 const CalendarSubMenu = () => {
   const { menu, changeMenu } = useMenuStore();
-  let selectedKey = "1";
+  let selectedKey = "all";
   if (menu) {
     for (let i = 0; i < items.length; i++) {
       if (items[i]!.key === menu) {
@@ -54,10 +43,8 @@ const CalendarSubMenu = () => {
       defaultSelectedKeys={[selectedKey]}
       mode="inline"
       items={items}
-      onSelect={({ item, key, keyPath, selectedKeys, domEvent }) => {
-        console.log(key);
-        changeMenu(key);
-      }}
+      selectedKeys={[menu]}
+      onSelect={({ key }) => changeMenu(key)}
     />
   );
 };
