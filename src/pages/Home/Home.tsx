@@ -1,8 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import supabase from "supabase/index";
-import Login from "pages/Login/Login";
-import Calendar from "pages/Calendar/Calendar";
 const Home = () => {
   const [user, setUser] = useState<any>({});
   const navigate = useNavigate();
@@ -27,10 +25,8 @@ const Home = () => {
       <br />
       <Link to={"/calendar"}>일정</Link>
       <br />
-      <div>
-      </div>
+      <div></div>
     </div>
-//    <div>{user !== null ? <Calendar /> : <Login />}</div>
   );
 };
 

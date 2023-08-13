@@ -6,7 +6,7 @@ import LoginForm from "components/Login/LoginForm";
 import SignUpForm from "components/Login/SignUpForm";
 import timeisgold2 from "assets/timeisgold2.png";
 import * as St from "style/loginStyled";
-import { StyleProvider, legacyLogicalPropertiesTransformer } from '@ant-design/cssinjs';
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Login = () => {
   ];
 
   return (
-    <StyleProvider transformers={[legacyLogicalPropertiesTransformer]}>
+
     <St.Grid>
       <div>
         <St.MainImg src={timeisgold2} alt="시간은 금이다 사진" />
@@ -52,7 +52,7 @@ const Login = () => {
         </Tabs>
       </St.LogInTabs>
     </St.Grid>
-    </StyleProvider>
+
   );
 };
 
