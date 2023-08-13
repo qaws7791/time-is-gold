@@ -1,5 +1,6 @@
-import { LockOutlined, MailOutlined, GoogleOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Space } from "antd";
+import google from "assets/google.png";
 import LoginStore from "store/LoginStore";
 import * as St from "style/loginStyled";
 const SignUpForm = () => {
@@ -11,8 +12,7 @@ const SignUpForm = () => {
     PasswordChangeHandler,
     PasswordCheckChangeHandler,
     signupHandler,
-    googleLoginHandler,
-    clear
+    googleLoginHandler
   } = LoginStore();
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
@@ -35,9 +35,10 @@ const SignUpForm = () => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
       >
-        <Form.Item name="email" rules={[{ required: true, message: "Please input your E-mail!" }]}>
+        <Form.Item name="email" rules={[{ required: true, message: "이메일을 입력해주세요!" }]}>
           <Input
-            prefix={<MailOutlined className="site-form-item-icon" />}
+            status="warning"
+            prefix={<MailOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="text"
             placeholder="E-mail"
             value={email}
@@ -47,10 +48,11 @@ const SignUpForm = () => {
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
+          rules={[{ required: true, message: "비밀번호를 입력해주세요!" }]}
         >
           <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
+            status="warning"
+            prefix={<LockOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="password"
             placeholder="password"
             value={password}
@@ -60,10 +62,11 @@ const SignUpForm = () => {
         </Form.Item>
         <Form.Item
           name="passwordCheck"
-          rules={[{ required: true, message: "Please input your Password agian!" }]}
+          rules={[{ required: true, message: "비밀번호를 다시 입력해주세요!" }]}
         >
           <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
+            status="warning"
+            prefix={<LockOutlined className="site-form-item-icon" style={{ color: "#F3AF00" }} />}
             type="password"
             placeholder="Password"
             value={passwordCheck}
@@ -74,10 +77,8 @@ const SignUpForm = () => {
         <St.Flex>
           <Form.Item>
             <Button
-              type="primary"
               htmlType="submit"
               className="signUp-form-button"
-              style={{ backgroundColor: "yellow" }}
               onClick={e => {
                 signupHandler(e);
                 resetField(e);
@@ -87,13 +88,10 @@ const SignUpForm = () => {
             </Button>
             <Space direction="vertical">
               <Space wrap>
-                <Button
-                  type="primary"
-                  icon={<GoogleOutlined />}
-                  style={{ backgroundColor: "yellow" }}
-                  onClick={googleLoginHandler}
-                >
-                  구글과 회원가입
+                <Button type="link" onClick={googleLoginHandler}>
+                  <St.GoogleSignImgFlex>
+                    <St.GoogleImg src={google} alt="구글로고" /> 구글과 회원가입
+                  </St.GoogleSignImgFlex>
                 </Button>
               </Space>
             </Space>
