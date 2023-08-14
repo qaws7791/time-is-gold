@@ -1,28 +1,70 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type TBackgroundColor = "#FFD1DF" | "#FFE0B2" | "#D0F0C0" | "#B3E0FF" | "#E6CCE6";
+
+export interface ISchedulesRow {
+  id: string;
+  email: string;
+  title: string;
+  start: string;
+  end: string;
+  backgroundColor: TBackgroundColor;
+}
+
+export interface ISchedulesInsert {
+  email: string;
+  title: string;
+  start: string;
+  end: string;
+  backgroundColor: TBackgroundColor;
+}
+
+export interface ISchedulesUpdate {
+  id?: never;
+  title?: string;
+  start?: string;
+  end?: string;
+  backgroundColor?: string;
+}
 
 export interface Database {
   public: {
     Tables: {
-      movies: {
+      todos: {
         Row: {
-          // the data expected from .select()
           id: number;
-          name: string;
-          data: Json | null;
+          email: string;
+          title: string;
+          content: string;
+          isDone: boolean;
+          tag: string[] | undefined;
+          deadLineDate: string | undefined;
+          important: boolean;
         };
         Insert: {
-          // the data to be passed to .insert()
-          id?: never; // generated columns must not be supplied
-          name: string; // `not null` columns with no default must be supplied
-          data?: Json | null; // nullable columns can be omitted
+          id?: never;
+          email: string;
+          title: string;
+          content: string;
+          isDone: boolean;
+          tag: string[];
+          deadLineDate: string | undefined;
+          important: boolean;
         };
         Update: {
-          // the data to be passed to .update()
           id?: never;
-          name?: string; // `not null` columns are optional on .update()
-          data?: Json | null;
+          email: string;
+          title: string;
+          content: string;
+          isDone: boolean;
+          tag: string[];
+          deadLineDate: string | undefined;
+          important: boolean;
         };
       };
+      Schedules: { Row: ISchedulesRow; Insert: ISchedulesInsert; Update: ISchedulesUpdate };
     };
   };
 }
+
+export type ITodo = Database["public"]["Tables"]["todos"]["Row"];
+export type ITodoForInsert = Database["public"]["Tables"]["todos"]["Insert"];
+export type ITodoForUpdate = Database["public"]["Tables"]["todos"]["Update"];

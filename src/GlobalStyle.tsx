@@ -7,8 +7,11 @@ const GlobalStyle = styled.createGlobalStyle`
 
   * {
     box-sizing: border-box;
-    color: #000000;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: "Roboto", normal, "Gowun Dodum", normal, sans-serif;
   }
 
   a {
