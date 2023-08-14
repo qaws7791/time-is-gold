@@ -21,44 +21,32 @@
 쉽고 직관적인 방법으로 사용자들의 일정을 관리할 수 있도록 월간 & 주간 & 일간 캘린더, Todo 설정, 중요 Todo 설정 기능을 제공합니다.
 
 ### 기술 스택
-<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"><img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"><img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=reactquery&logoColor=black"><img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=black"><img src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=black"><br/>
-<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"><img src="https://img.shields.io/badge/styled-components-DB7093?style=for-the-badge&logo=styled-components&logoColor=black"><img src="https://img.shields.io/badge/antdesign-0170FE?style=for-the-badge&logo=antdesign&logoColor=black"><img src="https://img.shields.io/badge/zustand-purple?style=for-the-badge&logo=zustand&logoColor=black"><img src="https://img.shields.io/badge/fullcalendar-yello?style=for-the-badge&logo=fullcalendar&logoColor=black">
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=reactquery&logoColor=black"> <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=black"> <img src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=black"><br/>
+<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/styled-components-DB7093?style=for-the-badge&logo=styled-components&logoColor=black"> <img src="https://img.shields.io/badge/antdesign-0170FE?style=for-the-badge&logo=antdesign&logoColor=black"> <img src="https://img.shields.io/badge/zustand-purple?style=for-the-badge&logo=zustand&logoColor=black"> <img src="https://img.shields.io/badge/fullcalendar-yello?style=for-the-badge&logo=fullcalendar&logoColor=black">
 
 ### 페이지 구성
-
-FIXME Warning: [antd: Tabs] Tabs.TabPane is deprecated. Please use `items` directly.
-로그인 화면
-
-FIXME Warning: [antd: Form.Item] `defaultValue` will not work on controlled Field. You should use `initialValues` of Form instead.
-수정 모달 띄울때
-
-FIXME query.ts:464 Query data cannot be undefined. Please make sure to return a value other than undefined from your query function. Affected query key: ["schedule","11"]
-schedule 클릭 했을 때
-
-TODO error 화면 구현
-
-#전동헌
-TODO Alert 모달 구현
-
-#백예나, 임설빈
-TODO 대본 작성
-
-#임설빈
-TODO README 작성
-
-#유준호
-TODO youtube 녹화
-
-TODO code splitting 마지막에 고려
-
-[x] loading 화면 구현
-
-[x] 캘린더 time table css 시간 제목 짤려서 나옴
-
-[x] todo 포스트 모달 안뜸
-
-[x] 로그아웃 하면 로컬스토리지 삭제
-
-[x] todo 수정 모달 UI
-
-[x] todo 수정 삭제
+![로그인-회원가입](https://github.com/qaws7791/time-is-gold/assets/109337901/cc967fb3-c6b2-4a47-b488-267ad6d4019f)
+- 접속 시 로그인상태가 아니라면 로그인 / 회원가입 페이지로 이동
+  
+![캘린더](https://github.com/qaws7791/time-is-gold/assets/109337901/77e85c44-7283-4d94-ac95-d7a5c49ef964)
+- 로그인 후 보이는 홈 화면
+  
+![캘린더-주간](https://github.com/qaws7791/time-is-gold/assets/109337901/ca94cc07-0e3a-4e27-b718-e936ef0f1224)
+- 우측 상단 주별 버튼을 클릭해서 주간 일정 확인 가능
+  
+![캘린더-일간](https://github.com/qaws7791/time-is-gold/assets/109337901/354f29e7-4c0e-45cf-bad1-0676f521ee8f)
+- 우측 상단 일별 버튼을 클릭해서 일간 일정 확인 가능
+  
+![캘린더확장](https://github.com/qaws7791/time-is-gold/assets/109337901/f1675724-0c84-4688-80f5-d3b07e482f55)
+- 좌측 상단 햄버거 버튼 클릭해서 사이드바 접기 가능 / 캘린더 확장
+  
+![상세-수정-삭제 모달](https://github.com/qaws7791/time-is-gold/assets/109337901/5a4aa5be-a974-4406-a9f3-dd1d7fb47853)
+- 일정 클릭 시 수정 / 삭제 모달 띄움
+  
+![Todo](https://github.com/qaws7791/time-is-gold/assets/109337901/dcbf0d62-ad0b-4d91-aee7-9d304bae7199)
+- 왼쪽 상단 캘린더 버튼 클릭 시 Todo로 이동 가능
+- 플러스(+) 아이콘 클릭해서 Todo 작성 가능
+- 좌측 카테고리에서 미완료 / 완료 / 중요 확인 가능
+    
+![Todo 수정-삭제](https://github.com/qaws7791/time-is-gold/assets/109337901/620b6813-9645-48cb-b0a7-bdb63ee4552c)
+- Todo 클릭 시 수정 / 삭제 모달 띄움
