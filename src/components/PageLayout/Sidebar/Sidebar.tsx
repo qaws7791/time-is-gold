@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import useViewport from "hooks/useViewport";
-import useMenuStore from "store/useMenuStore";
+import { useMenuStore } from "store";
 import SidebarContent from "./SidebarContent";
 import SidebarMenu from "./SidebarMenu";
 

@@ -2,8 +2,7 @@ import { Layout } from "antd";
 import { Header, Sidebar } from "components/PageLayout";
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useCurrentUser } from "store";
-import useMenuStore from "store/useMenuStore";
+import { useCurrentUser, useMenuStore } from "store";
 import supabase from "supabase";
 
 const { Content } = Layout;
@@ -31,7 +30,7 @@ const Home = () => {
   }, [navigate, setCurrentUser]);
 
   const [collapsed, setCollapsed] = useState(true);
-  const { changePage, changeMenu } = useMenuStore(state => state);
+  const { changePage, changeMenu } = useMenuStore();
   const { pathname } = useLocation();
 
   useEffect(() => {

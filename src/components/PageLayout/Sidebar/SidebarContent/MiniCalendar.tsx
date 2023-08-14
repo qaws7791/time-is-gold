@@ -2,7 +2,7 @@ import { Calendar, theme } from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import useMenuStore from "store/useMenuStore";
+import { useMenuStore } from "store";
 
 const MiniCalendar: React.FC = () => {
   const { date, changeDate } = useMenuStore();

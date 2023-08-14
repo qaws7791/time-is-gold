@@ -13,7 +13,7 @@ interface Store {
   changeDate: (date: string) => void;
 }
 
-const useMenuStore = create<Store>()(
+export const useMenuStore = create<Store>()(
   devtools(set => ({
     page: "calendar",
     changePage: page => set({ page, menu: "all", date: dayjs().format("YYYY-MM-DD") }),
@@ -25,4 +25,3 @@ const useMenuStore = create<Store>()(
     changeDate: date => set({ date })
   }))
 );
-export default useMenuStore;
