@@ -1,8 +1,9 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import * as St from "components/Login/LoginForm.style";
+import { useDialog } from "hooks/useDialog";
 import { useState } from "react";
-import { signUp } from "supabase/auth";
+import { AuthError, signUp } from "supabase/auth";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 
 const SignUpForm = () => {
@@ -14,8 +15,16 @@ const SignUpForm = () => {
     setInputValue({ ...inputValue, [name]: value });
   };
 
-  const onFinish = () => {
-    signUp(inputValue);
+  const { openDialog } = useDialog();
+  const onFinish = async () => {
+    try {
+      await signUp(inputValue);
+      openDialog({ type: "alert", title: "회원가입 성공", content: "환영합니다." });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        openDialog({ type: "alert", title: "회원가입 실패", content: error.message });
+      }
+    }
     setInputValue(initialValue);
   };
 

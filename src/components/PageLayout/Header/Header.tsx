@@ -1,6 +1,7 @@
 import { MenuOutlined } from "@ant-design/icons";
 import { Button, Layout, Typography } from "antd";
-import { logout } from "supabase/auth";
+import { useDialog } from "hooks/useDialog";
+import { AuthError, logout } from "supabase/auth";
 
 const { Header: AntHeader } = Layout;
 const { Title } = Typography;
@@ -11,6 +12,19 @@ interface IProps {
 }
 
 export const Header = ({ open, setOpen }: IProps) => {
+  const { openDialog } = useDialog();
+
+  const logOutHandler = () => {
+    try {
+      logout();
+      openDialog({ type: "alert", title: "로그아웃 성공", content: "안녕히 가세요." });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        openDialog({ type: "alert", title: "로그아웃 성공", content: error.message });
+      }
+    }
+  };
+
   return (
     <AntHeader
       style={{
@@ -30,7 +44,7 @@ export const Header = ({ open, setOpen }: IProps) => {
       <Title level={3} style={{ margin: 0 }}>
         시간은 금이다
       </Title>
-      <Button onClick={logout}>로그아웃</Button>
+      <Button onClick={logOutHandler}>로그아웃</Button>
     </AntHeader>
   );
 };

@@ -2,6 +2,7 @@ import { Button, DatePicker, Form, Input, Space } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { useTodo } from "hooks";
+import { useDialog } from "hooks/useDialog";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { ITodo } from "supabase/database.types";
@@ -43,8 +44,9 @@ const TodoUpdateForm: React.FC<Props> = ({ item, onConfirm, onClose }) => {
     onConfirm();
   };
 
-  const onClickDeleteHandler = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+  const { openDialog } = useDialog();
+  const onClickDeleteHandler = async () => {
+    if (await openDialog({ type: "confirm", title: "삭제 하시겠습니까?" })) {
       todoDeleteMutation.mutate(id);
       onClose();
     }

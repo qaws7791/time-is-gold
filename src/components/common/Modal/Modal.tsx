@@ -7,13 +7,12 @@ import * as Styled from "./Modal.style";
 interface IProps {
   children: React.ReactNode;
   closeTarget: keyof IModalStatus;
-  modalType?: string;
 }
 
 export const Modal = (props: IProps) => {
-  const { children, closeTarget, modalType, ...rest } = props;
+  const { children, closeTarget, ...rest } = props;
   const modalRef = useRef(null);
-  const { closeModal } = useModalStore(state => state);
+  const { closeModal } = useModalStore();
 
   const clickOutside = (event: MouseEvent): void => {
     if (modalRef.current === event.target) closeModal(closeTarget);

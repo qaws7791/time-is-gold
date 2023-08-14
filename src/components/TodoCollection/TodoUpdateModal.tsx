@@ -10,7 +10,7 @@ interface Props {
 
 const TodoUpdateModal: React.FC<Props> = ({ item, onConfirm, onClose }) => {
   return (
-    <BaseModal>
+    <BaseModal $type={"form"}>
       <TodoUpdateForm item={item} onConfirm={onConfirm} onClose={onClose} />
     </BaseModal>
   );
