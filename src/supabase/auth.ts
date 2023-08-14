@@ -38,12 +38,11 @@ export const signUp = async (inputValue: ISignupValue) => {
 
 // 구글 로그인 및 회원가입 기능
 export const googleLogin = async () => {
-  const { data, error } = await auth.signInWithOAuth({
+  const { error } = await auth.signInWithOAuth({
     provider: "google",
     options: { queryParams: { access_type: "offline", prompt: "consent" } }
   });
 
-  if (data) alert("로그인 되었습니다");
   if (error) console.log("error :", error);
 };
 

@@ -3,7 +3,7 @@ import { Menu } from "antd";
 import type { MenuProps } from "antd/es/menu";
 import { FaCircle } from "react-icons/fa";
 import { PiCheckFatBold, PiCheckFatFill } from "react-icons/pi";
-import useMenuStore from "store/useMenuStore";
+import { useMenuStore } from "store";
 import { styled } from "styled-components";
 import { allTags } from "../tag.data";
 
