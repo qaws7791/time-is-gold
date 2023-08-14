@@ -2,7 +2,7 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import type { MenuProps } from "antd/es/menu";
 import ColorDot from "components/ColorDot";
-import useMenuStore from "store/useMenuStore";
+import { useMenuStore } from "store";
 
 type MenuItem = Required<MenuProps>["items"][number];
 

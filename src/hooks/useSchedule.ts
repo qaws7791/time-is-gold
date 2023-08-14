@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCurrentUser, useScheduleStore } from "store";
-import useMenuStore from "store/useMenuStore"; // TODO export 수정
+import { useCurrentUser, useMenuStore, useScheduleStore } from "store";
 import { deleteData, getData, getFilterData, patchData, postData } from "supabase/schedule";
 
 export const useSchedule = () => {

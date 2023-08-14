@@ -4,7 +4,7 @@ import TodoModal from "components/TodoCollection/TodoModal";
 import { useTodo } from "hooks";
 import useOverlay from "hooks/useOverlay";
 import { FaPlus } from "react-icons/fa6";
-import useMenuStore from "store/useMenuStore";
+import { useMenuStore } from "store";
 import { styled } from "styled-components";
 
 const Todo = () => {
