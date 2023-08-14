@@ -1,7 +1,9 @@
 import { Button, Space, Typography } from "antd";
 import { IsLoading } from "components/PageLayout";
+import ConfirmModal from "components/common/BaseModal/ConfirmModal/ConfirmModal";
 import dayjs from "dayjs";
 import { useSchedule } from "hooks";
+import useOverlay from "hooks/useOverlay";
 import { useState } from "react";
 import { useModalStore } from "store";
 import { ModifyCalendarForm } from "./Form/ModifyCalendarForm";
@@ -17,8 +19,26 @@ export const DetailSchedule = () => {
 
   const { data: selectedSchedule, isError, isLoading } = selectedData;
 
-  const deleteHandler = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+  const overlay = useOverlay();
+  const openPromiseConfirm = () =>
+    new Promise(resolve => {
+      overlay.open(({ close }) => (
+        <ConfirmModal
+          title={"삭제 하시겠습니까?"}
+          onConfirm={() => {
+            resolve(true);
+            close();
+          }}
+          onClose={() => {
+            resolve(false);
+            close();
+          }}
+        />
+      ));
+    });
+
+  const deleteHandler = async () => {
+    if (await openPromiseConfirm()) {
       deleteMutation.mutate(selectedSchedule.id);
       closeModal("detailSchedule");
     }

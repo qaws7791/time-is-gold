@@ -8,7 +8,7 @@ interface Props {
 
 const TodoModal = ({ onConfirm, onClose }: Props) => {
   return (
-    <BaseModal>
+    <BaseModal $type={"form"}>
       <TodoForm onConfirm={onConfirm} onClose={onClose} />
     </BaseModal>
   );

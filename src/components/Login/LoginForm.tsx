@@ -1,9 +1,10 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import * as St from "components/Login/LoginForm.style";
+import { useDialog } from "hooks/useDialog";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { login } from "supabase/auth";
+import { useNavigate } from "react-router-dom";
+import { login, AuthError } from "supabase/auth";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 
 const LoginForm = () => {
@@ -17,9 +18,17 @@ const LoginForm = () => {
     setInputValue({ ...inputValue, [name]: value });
   };
 
-  const onFinish = () => {
-    login(inputValue);
-    navigate("/");
+  const { openDialog } = useDialog();
+  const onFinish = async () => {
+    try {
+      await login(inputValue);
+      openDialog({ type: "alert", title: "로그인 성공", content: "환영합니다." });
+      navigate("/");
+    } catch (error) {
+      if (error instanceof AuthError) {
+        openDialog({ type: "alert", title: "로그인 실패", content: error.message });
+      }
+    }
     setInputValue(initialValue);
   };
 
